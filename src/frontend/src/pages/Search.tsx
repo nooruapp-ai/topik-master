@@ -11,6 +11,7 @@ import SearchBar from '../components/ui/SearchBar';
 import Card from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
 import Highlight from '../components/ui/Highlight';
+import EmptyState from '../components/ui/EmptyState';
 
 export default function Search() {
   const [params] = useSearchParams();
@@ -90,7 +91,7 @@ export default function Search() {
             )}
           </div>
         ) : total === 0 ? (
-          <Card className="text-[14px] text-ink-faint">{t('search.noResults', { q })}</Card>
+          <EmptyState emoji="🔍" title={t('search.noResults', { q })} />
         ) : (
           <div className="space-y-6">
             {results!.courses.length > 0 && (

@@ -22,6 +22,7 @@ import TopBar from '../components/ui/TopBar';
 import Card from '../components/ui/Card';
 import Avatar from '../components/ui/Avatar';
 import Badge from '../components/ui/Badge';
+import EmptyState from '../components/ui/EmptyState';
 
 export default function Profile() {
   const { t } = useTranslation();
@@ -153,7 +154,7 @@ export default function Profile() {
         ) : savedLoading ? (
           <Spinner />
         ) : savedCount === 0 ? (
-          <Card className="text-[14px] text-ink-faint">{t('profile.savedEmpty')}</Card>
+          <EmptyState emoji="🔖" title={t('profile.savedEmpty')} />
         ) : (
           <div className="space-y-3">
             {saved!.courses.map((c) => (

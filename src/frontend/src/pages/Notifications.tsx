@@ -9,6 +9,7 @@ import type { AppNotification } from '../types';
 import Spinner from '../components/Spinner';
 import TopBar from '../components/ui/TopBar';
 import Card from '../components/ui/Card';
+import EmptyState from '../components/ui/EmptyState';
 
 const ICONS: Record<string, LucideIcon> = {
   like: Heart,
@@ -50,7 +51,7 @@ export default function Notifications() {
         ) : error ? (
           <Card className="text-[14px] text-error">{error}</Card>
         ) : items.length === 0 ? (
-          <Card className="text-[14px] text-ink-faint">{t('notifications.empty')}</Card>
+          <EmptyState emoji="🔔" title={t('notifications.empty')} />
         ) : (
           <ul className="space-y-2.5">
             {items.map((n) => {

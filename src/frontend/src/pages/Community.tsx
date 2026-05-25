@@ -10,6 +10,8 @@ import TopBar from '../components/ui/TopBar';
 import Card from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
 import Button from '../components/ui/Button';
+import EmptyState from '../components/ui/EmptyState';
+import { CardSkeletonList } from '../components/ui/Skeleton';
 
 const FILTERS = ['all', 'free', 'question', 'tip'];
 const WRITE_CATEGORIES = ['free', 'question', 'tip'];
@@ -133,11 +135,15 @@ export default function Community() {
         )}
 
         {loading ? (
-          <Spinner />
+          <CardSkeletonList />
         ) : error ? (
           <Card className="text-[14px] text-error">{error}</Card>
         ) : posts.length === 0 ? (
-          <Card className="text-[14px] text-ink-faint">{t('community.empty')}</Card>
+          <EmptyState
+            emoji="📝"
+            title={t('community.empty')}
+            action={<Button onClick={() => setWriting(true)}>{t('community.write')}</Button>}
+          />
         ) : (
           <ul className="space-y-4">
             {posts.map((post) => (
