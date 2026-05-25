@@ -12,6 +12,7 @@ import commentsRoutes from './routes/comments';
 import progressRoutes from './routes/progress';
 import searchRoutes from './routes/search';
 import bookmarksRoutes from './routes/bookmarks';
+import notificationsRoutes from './routes/notifications';
 import leaderboardRoutes from './routes/leaderboard';
 import usersRoutes from './routes/users';
 
@@ -38,6 +39,7 @@ app.use('/api/comments', commentsRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/bookmarks', bookmarksRoutes);
+app.use('/api/notifications', notificationsRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
 app.use('/api/users', usersRoutes);
 

@@ -5,6 +5,7 @@ import { AppError } from '../middleware/errorHandler';
 import { authenticate } from '../middleware/auth';
 import { AuthRequest } from '../types';
 import { awardXp } from '../utils/gamification';
+import { createNotification } from '../utils/notify';
 
 const router = Router();
 
@@ -178,7 +179,7 @@ router.post(
 
     const { data: post, error: postErr } = await supabase
       .from('posts')
-      .select('like_count')
+      .select('like_count, user_id')
       .eq('id', postId)
       .maybeSingle();
     if (postErr) throw new AppError(postErr.message, 500);
@@ -205,6 +206,14 @@ router.post(
       if (insErr) throw new AppError(insErr.message, 500);
       likeCount += 1;
       liked = true;
+      await createNotification({
+        userId: post.user_id,
+        actorId: userId,
+        type: 'like',
+        targetType: 'post',
+        targetId: postId,
+        message: '회원님의 글을 좋아합니다.',
+      });
     }
 
     await supabase.from('posts').update({ like_count: likeCount }).eq('id', postId);

@@ -9,6 +9,7 @@ import type { UserStatistics, Course } from '../types';
 import Spinner from '../components/Spinner';
 import Card from '../components/ui/Card';
 import SearchBar from '../components/ui/SearchBar';
+import NotificationBell from '../components/ui/NotificationBell';
 
 export default function Home() {
   const { t } = useTranslation();
@@ -43,9 +44,12 @@ export default function Home() {
 
   return (
     <div className="px-5 pt-8">
-      <header className="mb-6">
-        <p className="text-[14px] text-ink-soft">{t('app.name')}</p>
-        <h1 className="mt-1 text-title-xl text-ink">{t('home.greeting', { name: user?.username ?? '' })}</h1>
+      <header className="mb-6 flex items-start justify-between">
+        <div>
+          <p className="text-[14px] text-ink-soft">{t('app.name')}</p>
+          <h1 className="mt-1 text-title-xl text-ink">{t('home.greeting', { name: user?.username ?? '' })}</h1>
+        </div>
+        <NotificationBell />
       </header>
 
       <div className="mb-6">

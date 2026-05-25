@@ -4,6 +4,7 @@ import { asyncHandler } from '../utils/asyncHandler';
 import { AppError } from '../middleware/errorHandler';
 import { authenticate } from '../middleware/auth';
 import { AuthRequest } from '../types';
+import { createNotification } from '../utils/notify';
 
 const router = Router();
 
@@ -55,6 +56,23 @@ router.post(
       throw new AppError(error?.message ?? '댓글 작성에 실패했습니다.', 500);
     }
     await bumpCommentCount(post_id, 1);
+
+    const { data: post } = await supabase
+      .from('posts')
+      .select('user_id')
+      .eq('id', post_id)
+      .maybeSingle();
+    if (post) {
+      await createNotification({
+        userId: post.user_id,
+        actorId: req.user!.userId,
+        type: 'comment',
+        targetType: 'post',
+        targetId: post_id,
+        message: '회원님의 글에 댓글을 남겼습니다.',
+      });
+    }
+
     res.status(201).json({ success: true, data });
   })
 );

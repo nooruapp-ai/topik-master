@@ -116,6 +116,19 @@ export interface SearchResults {
   posts: Post[];
 }
 
+export interface AppNotification {
+  id: string;
+  user_id: string;
+  actor_id: string | null;
+  type: 'like' | 'comment' | 'friend_request';
+  target_type: string | null;
+  target_id: string | null;
+  message: string | null;
+  is_read: boolean;
+  created_at: string;
+  actor?: { id: string; username: string } | null;
+}
+
 export interface ApiResponse<T> {
   success: boolean;
   data: T;

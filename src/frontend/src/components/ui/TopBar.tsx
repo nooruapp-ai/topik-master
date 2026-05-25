@@ -1,14 +1,16 @@
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft } from 'lucide-react';
 import type { ReactNode } from 'react';
+import NotificationBell from './NotificationBell';
 
 interface TopBarProps {
   title?: string;
   showBack?: boolean;
   right?: ReactNode;
+  showBell?: boolean;
 }
 
-export default function TopBar({ title, showBack = false, right }: TopBarProps) {
+export default function TopBar({ title, showBack = false, right, showBell = true }: TopBarProps) {
   const navigate = useNavigate();
 
   return (
@@ -23,7 +25,7 @@ export default function TopBar({ title, showBack = false, right }: TopBarProps) 
         </button>
       )}
       {title && <h1 className="text-title-m text-ink">{title}</h1>}
-      {right && <div className="ml-auto">{right}</div>}
+      <div className="ml-auto">{right ?? (showBell ? <NotificationBell /> : null)}</div>
     </header>
   );
 }
