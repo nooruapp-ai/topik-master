@@ -178,8 +178,8 @@
   },
   "learn": {
     "title": "学習",
-    "selectLevel": "学習する段階を選んでください",
-    "selectCategory": "学習する分野を選んでください",
+    "selectLevel": "学習する段階を選択してください",
+    "selectCategory": "学習する分野を選択してください",
     "levelTitle": {
       "topik1": "TOPIK I",
       "topik2_mid": "TOPIK II 中級",
@@ -212,8 +212,8 @@
     "detailedExplanation": "詳しい解説",
     "wrongAnalysis": "誤答分析",
     "learningPoint": "学習ポイント",
-    "reviewTip": "この問題のポイント",
-    "watchOut": "似た問題で注意しましょう",
+    "reviewTip": "今回の問題のポイント",
+    "watchOut": "似た問題に注意",
     "next": "次の問題",
     "seeResult": "結果を見る",
     "submit": "正解を確認",
