@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute';
+import AdminRoute from './components/AdminRoute';
 import Layout from './components/Layout';
 import Spinner from './components/Spinner';
 
@@ -22,6 +23,9 @@ const PostDetail = lazy(() => import('./pages/PostDetail'));
 const Profile = lazy(() => import('./pages/Profile'));
 const Search = lazy(() => import('./pages/Search'));
 const Notifications = lazy(() => import('./pages/Notifications'));
+// 관리자 콘솔
+const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
+const AdminProblemReview = lazy(() => import('./pages/admin/AdminProblemReview'));
 
 export default function App() {
   return (
@@ -46,6 +50,12 @@ export default function App() {
             <Route path="/search" element={<Search />} />
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/profile" element={<Profile />} />
+          </Route>
+
+          {/* 관리자 전용 (탭바 없는 별도 레이아웃) */}
+          <Route element={<AdminRoute />}>
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/review" element={<AdminProblemReview />} />
           </Route>
         </Route>
 

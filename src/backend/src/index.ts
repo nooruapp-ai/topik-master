@@ -18,6 +18,7 @@ import bookmarksRoutes from './routes/bookmarks';
 import notificationsRoutes from './routes/notifications';
 import leaderboardRoutes from './routes/leaderboard';
 import usersRoutes from './routes/users';
+import adminRoutes from './routes/admin';
 
 const app = express();
 
@@ -48,6 +49,7 @@ app.use('/api/bookmarks', bookmarksRoutes);
 app.use('/api/notifications', notificationsRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
 app.use('/api/users', usersRoutes);
+app.use('/api/admin', adminRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

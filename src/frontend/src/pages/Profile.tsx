@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, Link } from 'react-router-dom';
-import { LogOut } from 'lucide-react';
+import { LogOut, ShieldCheck } from 'lucide-react';
 import {
   ResponsiveContainer,
   BarChart,
@@ -15,6 +15,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { getUserStatistics } from '../api/users';
 import { getBookmarks } from '../api/bookmarks';
+import { getAdminMe } from '../api/admin';
 import { getErrorMessage } from '../api/client';
 import type { UserStatistics, SearchResults } from '../types';
 import Spinner from '../components/Spinner';
@@ -36,6 +37,18 @@ export default function Profile() {
 
   const [saved, setSaved] = useState<SearchResults | null>(null);
   const [savedLoading, setSavedLoading] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  // 관리자면 콘솔 진입 링크 노출 (비관리자는 403 → 무시)
+  useEffect(() => {
+    let active = true;
+    getAdminMe()
+      .then(() => active && setIsAdmin(true))
+      .catch(() => active && setIsAdmin(false));
+    return () => {
+      active = false;
+    };
+  }, []);
 
   useEffect(() => {
     if (!user) return;
@@ -182,9 +195,21 @@ export default function Profile() {
           </div>
         )}
 
+        {isAdmin && (
+          <Link
+            to="/admin"
+            className="mt-8 flex h-[52px] w-full items-center justify-center gap-2 rounded-btn border border-primary/30 bg-primary-light text-[16px] font-semibold text-primary transition-transform duration-200 ease-ios active:scale-[0.98]"
+          >
+            <ShieldCheck size={18} strokeWidth={1.75} />
+            관리자 콘솔
+          </Link>
+        )}
+
         <button
           onClick={handleLogout}
-          className="mt-8 flex h-[52px] w-full items-center justify-center gap-2 rounded-btn border border-error/30 bg-white text-[16px] font-semibold text-error transition-transform duration-200 ease-ios active:scale-[0.98]"
+          className={`flex h-[52px] w-full items-center justify-center gap-2 rounded-btn border border-error/30 bg-white text-[16px] font-semibold text-error transition-transform duration-200 ease-ios active:scale-[0.98] ${
+            isAdmin ? 'mt-3' : 'mt-8'
+          }`}
         >
           <LogOut size={18} strokeWidth={1.75} />
           {t('profile.logout')}

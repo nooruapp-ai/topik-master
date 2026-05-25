@@ -7,6 +7,7 @@ export interface AuthPayload {
 
 export interface AuthRequest extends Request {
   user?: AuthPayload;
+  adminRole?: string; // requireAdmin 통과 시 채워짐 (admin / super_admin)
 }
 
 export interface ApiSuccess<T> {

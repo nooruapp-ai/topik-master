@@ -50,6 +50,12 @@ export interface Problem {
   wrong_answer_analysis?: string[] | null; // options 순서에 대응하는 오답 분석
   learning_point?: string | null;
   review_tip?: string | null;
+  // 검토/생성 메타 (시스템 1·3·4)
+  status?: 'pending' | 'approved' | 'rejected' | string;
+  created_by?: 'ai' | 'admin' | string;
+  grammar_tags?: string[] | null;
+  vocabulary_tags?: string[] | null;
+  difficulty_predicted?: number | null;
 }
 
 export interface Vocabulary {
