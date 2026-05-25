@@ -130,9 +130,15 @@ export default function Test() {
         </div>
       ) : current ? (
         <div className="rounded-2xl border border-gray-200 bg-white p-5">
-          <p className="mb-3 text-xs font-medium text-primary">
+          <p className="mb-2 text-xs font-medium text-primary">
             {t('test.question', { current: index + 1, total: problems.length })}
           </p>
+          <div className="mb-4 h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
+            <div
+              className="h-full rounded-full bg-primary transition-all"
+              style={{ width: `${((index + 1) / problems.length) * 100}%` }}
+            />
+          </div>
           <p className="mb-5 text-base font-semibold leading-relaxed text-gray-900">
             {current.question}
           </p>
