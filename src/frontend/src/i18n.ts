@@ -6,7 +6,8 @@ import ja from './locales/ja.json';
 export const LANG_KEY = 'topik_lang';
 export type Lang = 'ko' | 'ja';
 
-// 타겟 사용자는 일본인이므로 기본 언어는 일본어. 저장된 선택이 있으면 우선합니다.
+// 개발 중에는 기본 언어를 한국어로 사용합니다(출시 직전 'ja' 로 변경 예정).
+// 저장된 선택이 있으면 우선합니다.
 function initialLang(): Lang {
   try {
     const saved = localStorage.getItem(LANG_KEY);
@@ -14,7 +15,7 @@ function initialLang(): Lang {
   } catch {
     /* localStorage 미사용 환경 무시 */
   }
-  return 'ja';
+  return 'ko';
 }
 
 i18n.use(initReactI18next).init({
@@ -23,7 +24,7 @@ i18n.use(initReactI18next).init({
     ja: { translation: ja },
   },
   lng: initialLang(),
-  fallbackLng: 'ja',
+  fallbackLng: 'ko',
   interpolation: {
     escapeValue: false,
   },

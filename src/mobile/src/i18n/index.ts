@@ -7,14 +7,14 @@ import ja from './ja.json';
 export const LANG_KEY = 'topik_lang';
 export type Lang = 'ko' | 'ja';
 
-// 타겟 사용자가 일본인이므로 기본 언어는 일본어입니다.
+// 개발 중에는 기본 언어를 한국어로 사용합니다(출시 직전 'ja' 로 변경 예정).
 void i18n.use(initReactI18next).init({
   resources: {
     ko: { translation: ko },
     ja: { translation: ja },
   },
-  lng: 'ja',
-  fallbackLng: 'ja',
+  lng: 'ko',
+  fallbackLng: 'ko',
   interpolation: { escapeValue: false },
 });
 
