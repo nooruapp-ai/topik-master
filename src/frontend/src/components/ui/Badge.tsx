@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { memo, type ReactNode } from 'react';
 
 type Tone = 'primary' | 'coral' | 'mint' | 'yellow' | 'neutral';
 
@@ -16,7 +16,7 @@ interface BadgeProps {
   className?: string;
 }
 
-export default function Badge({ tone = 'primary', children, className = '' }: BadgeProps) {
+function Badge({ tone = 'primary', children, className = '' }: BadgeProps) {
   return (
     <span
       className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[12px] font-semibold ${tones[tone]} ${className}`}
@@ -25,3 +25,5 @@ export default function Badge({ tone = 'primary', children, className = '' }: Ba
     </span>
   );
 }
+
+export default memo(Badge);

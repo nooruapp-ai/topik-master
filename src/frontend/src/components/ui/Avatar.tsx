@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 type Size = 'sm' | 'md' | 'lg';
 
 const sizes: Record<Size, string> = {
@@ -12,7 +14,7 @@ interface AvatarProps {
   className?: string;
 }
 
-export default function Avatar({ name, size = 'md', className = '' }: AvatarProps) {
+function Avatar({ name, size = 'md', className = '' }: AvatarProps) {
   const initial = (name?.trim()?.charAt(0) || '?').toUpperCase();
   return (
     <div
@@ -22,3 +24,5 @@ export default function Avatar({ name, size = 'md', className = '' }: AvatarProp
     </div>
   );
 }
+
+export default memo(Avatar);

@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { env } from './config/env';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
+import { publicCache } from './middleware/cache';
 
 import authRoutes from './routes/auth';
 import coursesRoutes from './routes/courses';
@@ -31,13 +32,14 @@ app.get('/api/health', (_req, res) => {
 });
 
 app.use('/api/auth', authRoutes);
-app.use('/api/courses', coursesRoutes);
-app.use('/api/problems', problemsRoutes);
+// 공개 읽기 라우트는 짧은 캐시를 적용
+app.use('/api/courses', publicCache(120), coursesRoutes);
+app.use('/api/problems', publicCache(120), problemsRoutes);
+app.use('/api/search', publicCache(30), searchRoutes);
 app.use('/api/submissions', submissionsRoutes);
 app.use('/api/posts', postsRoutes);
 app.use('/api/comments', commentsRoutes);
 app.use('/api/progress', progressRoutes);
-app.use('/api/search', searchRoutes);
 app.use('/api/bookmarks', bookmarksRoutes);
 app.use('/api/notifications', notificationsRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
