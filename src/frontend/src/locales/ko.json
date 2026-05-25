@@ -107,6 +107,12 @@
     "update": "수정 완료",
     "back": "목록으로",
     "deleteConfirm": "이 게시글을 삭제할까요?",
+    "like": "좋아요",
+    "comments": "댓글",
+    "commentPlaceholder": "댓글을 입력하세요",
+    "addComment": "등록",
+    "noComments": "첫 댓글을 남겨보세요.",
+    "deleteCommentConfirm": "댓글을 삭제할까요?",
     "categoryFilter": {
       "all": "전체",
       "free": "자유",

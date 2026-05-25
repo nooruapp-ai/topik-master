@@ -1,10 +1,11 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { getPost, updatePost, deletePost } from '../api/posts';
+import { getPost, updatePost, deletePost, getLikeStatus, toggleLike } from '../api/posts';
+import { getComments, createComment, deleteComment } from '../api/comments';
 import { getErrorMessage } from '../api/client';
 import { useAuth } from '../context/AuthContext';
-import type { Post } from '../types';
+import type { Post, Comment } from '../types';
 import Spinner from '../components/Spinner';
 
 export default function PostDetail() {
@@ -21,18 +22,30 @@ export default function PostDetail() {
   const [content, setContent] = useState('');
   const [busy, setBusy] = useState(false);
 
+  const [liked, setLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [newComment, setNewComment] = useState('');
+  const [commentBusy, setCommentBusy] = useState(false);
+
   useEffect(() => {
     if (!id) return;
     let active = true;
-    getPost(id)
-      .then((p) => {
-        if (!active) return;
-        setPost(p);
-        setTitle(p.title);
-        setContent(p.content);
-      })
-      .catch((e) => active && setError(getErrorMessage(e)))
-      .finally(() => active && setLoading(false));
+    Promise.allSettled([getPost(id), getLikeStatus(id), getComments(id)]).then((results) => {
+      if (!active) return;
+      const [postR, likeR, commentsR] = results;
+      if (postR.status === 'fulfilled') {
+        setPost(postR.value);
+        setTitle(postR.value.title);
+        setContent(postR.value.content);
+        setLikeCount(postR.value.like_count ?? 0);
+      } else {
+        setError(getErrorMessage(postR.reason));
+      }
+      if (likeR.status === 'fulfilled') setLiked(likeR.value);
+      if (commentsR.status === 'fulfilled') setComments(commentsR.value);
+      setLoading(false);
+    });
     return () => {
       active = false;
     };
@@ -64,6 +77,42 @@ export default function PostDetail() {
     } catch (err) {
       setError(getErrorMessage(err));
       setBusy(false);
+    }
+  }
+
+  async function handleToggleLike() {
+    if (!id) return;
+    try {
+      const result = await toggleLike(id);
+      setLiked(result.liked);
+      setLikeCount(result.like_count);
+    } catch (err) {
+      setError(getErrorMessage(err));
+    }
+  }
+
+  async function handleAddComment(e: FormEvent) {
+    e.preventDefault();
+    if (!id || !newComment.trim()) return;
+    setCommentBusy(true);
+    try {
+      const c = await createComment(id, newComment.trim());
+      setComments((prev) => [...prev, c]);
+      setNewComment('');
+    } catch (err) {
+      setError(getErrorMessage(err));
+    } finally {
+      setCommentBusy(false);
+    }
+  }
+
+  async function handleDeleteComment(commentId: string) {
+    if (!window.confirm(t('community.deleteCommentConfirm'))) return;
+    try {
+      await deleteComment(commentId);
+      setComments((prev) => prev.filter((c) => c.id !== commentId));
+    } catch (err) {
+      setError(getErrorMessage(err));
     }
   }
 
@@ -125,8 +174,18 @@ export default function PostDetail() {
             {post.content}
           </p>
 
+          <button
+            onClick={handleToggleLike}
+            className={`mt-5 flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition ${
+              liked ? 'border-red-300 bg-red-50 text-red-500' : 'border-gray-200 text-gray-500'
+            }`}
+          >
+            <span>{liked ? '❤️' : '🤍'}</span>
+            <span>{t('community.like')} {likeCount}</span>
+          </button>
+
           {isOwner && (
-            <div className="mt-5 flex gap-2">
+            <div className="mt-4 flex gap-2">
               <button
                 onClick={() => setEditing(true)}
                 className="flex-1 rounded-xl border border-primary py-2.5 text-sm font-semibold text-primary"
@@ -143,6 +202,59 @@ export default function PostDetail() {
             </div>
           )}
         </article>
+      )}
+
+      {/* 댓글 섹션 */}
+      {post && !editing && (
+        <section className="mt-6">
+          <h2 className="mb-3 text-base font-bold text-gray-900">
+            {t('community.comments')} {comments.length}
+          </h2>
+
+          {comments.length === 0 ? (
+            <p className="mb-3 rounded-xl bg-white p-4 text-sm text-gray-400">
+              {t('community.noComments')}
+            </p>
+          ) : (
+            <ul className="mb-3 space-y-2">
+              {comments.map((c) => (
+                <li key={c.id} className="rounded-2xl border border-gray-200 bg-white p-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold text-gray-700">
+                      {c.author?.username ?? '익명'}
+                    </span>
+                    {user && c.user_id === user.id && (
+                      <button
+                        onClick={() => handleDeleteComment(c.id)}
+                        className="text-xs text-red-400"
+                      >
+                        {t('community.delete')}
+                      </button>
+                    )}
+                  </div>
+                  <p className="mt-1 whitespace-pre-wrap text-sm text-gray-700">{c.content}</p>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          <form onSubmit={handleAddComment} className="flex gap-2">
+            <input
+              type="text"
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              placeholder={t('community.commentPlaceholder')}
+              className="flex-1 rounded-xl border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-primary"
+            />
+            <button
+              type="submit"
+              disabled={commentBusy || !newComment.trim()}
+              className="rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-50"
+            >
+              {t('community.addComment')}
+            </button>
+          </form>
+        </section>
       )}
     </div>
   );

@@ -149,4 +149,63 @@ router.delete(
   })
 );
 
+/** GET /api/posts/:id/like (내 좋아요 여부) */
+router.get(
+  '/:id/like',
+  authenticate,
+  asyncHandler<AuthRequest>(async (req, res) => {
+    const { data } = await supabase
+      .from('post_likes')
+      .select('id')
+      .eq('post_id', req.params.id)
+      .eq('user_id', req.user!.userId)
+      .maybeSingle();
+    res.json({ success: true, data: { liked: Boolean(data) } });
+  })
+);
+
+/** POST /api/posts/:id/like (좋아요 토글, 중복 방지) */
+router.post(
+  '/:id/like',
+  authenticate,
+  asyncHandler<AuthRequest>(async (req, res) => {
+    const postId = req.params.id;
+    const userId = req.user!.userId;
+
+    const { data: post, error: postErr } = await supabase
+      .from('posts')
+      .select('like_count')
+      .eq('id', postId)
+      .maybeSingle();
+    if (postErr) throw new AppError(postErr.message, 500);
+    if (!post) throw new AppError('게시글을 찾을 수 없습니다.', 404);
+
+    const { data: existing } = await supabase
+      .from('post_likes')
+      .select('id')
+      .eq('post_id', postId)
+      .eq('user_id', userId)
+      .maybeSingle();
+
+    let liked: boolean;
+    let likeCount = post.like_count ?? 0;
+
+    if (existing) {
+      await supabase.from('post_likes').delete().eq('id', existing.id);
+      likeCount = Math.max(0, likeCount - 1);
+      liked = false;
+    } else {
+      const { error: insErr } = await supabase
+        .from('post_likes')
+        .insert({ post_id: postId, user_id: userId });
+      if (insErr) throw new AppError(insErr.message, 500);
+      likeCount += 1;
+      liked = true;
+    }
+
+    await supabase.from('posts').update({ like_count: likeCount }).eq('id', postId);
+    res.json({ success: true, data: { liked, like_count: likeCount } });
+  })
+);
+
 export default router;

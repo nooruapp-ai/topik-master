@@ -239,6 +239,19 @@ create trigger trg_user_progress_updated
   for each row execute function set_updated_at();
 
 -- =============================================================
+-- 15. post_likes (좋아요 — Phase 2, 중복 방지)
+-- =============================================================
+create table if not exists post_likes (
+  id         uuid primary key default gen_random_uuid(),
+  post_id    uuid not null references posts (id) on delete cascade,
+  user_id    uuid not null references users (id) on delete cascade,
+  created_at timestamptz not null default now(),
+  unique (post_id, user_id)
+);
+create index if not exists idx_post_likes_post on post_likes (post_id);
+create index if not exists idx_post_likes_user on post_likes (user_id);
+
+-- =============================================================
 -- 시드 데이터 (데모용 강좌/레슨/문제)
 -- =============================================================
 insert into courses (id, title, description, level, category) values

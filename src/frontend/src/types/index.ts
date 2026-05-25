@@ -64,6 +64,15 @@ export interface Post {
   created_at: string;
 }
 
+export interface Comment {
+  id: string;
+  post_id: string;
+  user_id: string;
+  content: string;
+  author?: { id: string; username: string } | null;
+  created_at: string;
+}
+
 export interface LeaderboardEntry {
   id: string;
   rank: number;

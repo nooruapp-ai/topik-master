@@ -8,6 +8,7 @@ import coursesRoutes from './routes/courses';
 import problemsRoutes from './routes/problems';
 import submissionsRoutes from './routes/submissions';
 import postsRoutes from './routes/posts';
+import commentsRoutes from './routes/comments';
 import leaderboardRoutes from './routes/leaderboard';
 import usersRoutes from './routes/users';
 
@@ -30,6 +31,7 @@ app.use('/api/courses', coursesRoutes);
 app.use('/api/problems', problemsRoutes);
 app.use('/api/submissions', submissionsRoutes);
 app.use('/api/posts', postsRoutes);
+app.use('/api/comments', commentsRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
 app.use('/api/users', usersRoutes);
 
