@@ -43,6 +43,31 @@ export interface Problem {
   correct_answer?: string;
   explanation?: string | null;
   points: number;
+  // 학습 구조 개편: 유형 연결 + 보강 콘텐츠
+  type_id?: string | null;
+  hint?: string | null;
+  detailed_explanation?: string | null;
+  wrong_answer_analysis?: string[] | null; // options 순서에 대응하는 오답 분석
+  learning_point?: string | null;
+  review_tip?: string | null;
+}
+
+export type TopikLevel = 'topik1' | 'topik2_mid' | 'topik2_high';
+
+export interface ProblemType {
+  id: string;
+  level: TopikLevel | string;
+  category: string;
+  type_number: number;
+  type_name: string;
+  description?: string | null;
+  question_numbers?: string | null;
+  tips: string[];
+  warnings: string[];
+  real_review?: string | null;
+  difficulty: number;
+  avg_accuracy?: number | null;
+  created_at?: string;
 }
 
 export interface SubmissionResult {

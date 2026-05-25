@@ -4,6 +4,7 @@ import { ApiResponse, Problem, SubmissionResult } from '../types';
 export async function getProblems(params?: {
   category?: string;
   level?: number;
+  type_id?: string;
   limit?: number;
 }): Promise<Problem[]> {
   const { data } = await client.get<ApiResponse<Problem[]>>('/problems', { params });
