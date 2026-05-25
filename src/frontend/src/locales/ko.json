@@ -136,10 +136,14 @@
     "totalScore": "총 점수",
     "logout": "로그아웃",
     "memberSince": "가입일",
+    "studyTime": "예상 학습시간",
+    "byCategory": "영역별 풀이·정답",
+    "noData": "아직 데이터가 없습니다. 문제를 풀어보세요!",
     "unit": {
       "count": "개",
       "percent": "%",
-      "point": "점"
+      "point": "점",
+      "minute": "분"
     }
   }
 }

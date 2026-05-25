@@ -32,7 +32,7 @@ router.get(
 
     const { data: submissions } = await supabase
       .from('submissions')
-      .select('is_correct, score')
+      .select('is_correct, score, submitted_at, problem:problems(category)')
       .eq('user_id', userId);
 
     const list = submissions ?? [];
@@ -40,6 +40,24 @@ router.get(
     const correctCount = list.filter((s) => s.is_correct).length;
     const totalScore = list.reduce((sum, s) => sum + (s.score ?? 0), 0);
     const accuracy = totalSubmissions > 0 ? Math.round((correctCount / totalSubmissions) * 100) : 0;
+
+    // 영역(카테고리)별 집계 — 차트용
+    const categoryMap: Record<string, { category: string; total: number; correct: number }> = {};
+    for (const s of list) {
+      const problem = s.problem as { category?: string } | null;
+      const category = problem?.category ?? 'unknown';
+      if (!categoryMap[category]) categoryMap[category] = { category, total: 0, correct: 0 };
+      categoryMap[category].total += 1;
+      if (s.is_correct) categoryMap[category].correct += 1;
+    }
+    const byCategory = Object.values(categoryMap);
+
+    // 활동 일수 (제출이 있었던 고유 날짜 수)
+    const activeDays = new Set(
+      list
+        .map((s) => (s.submitted_at ? new Date(s.submitted_at as string).toISOString().slice(0, 10) : null))
+        .filter((d): d is string => Boolean(d))
+    ).size;
 
     res.json({
       success: true,
@@ -51,6 +69,8 @@ router.get(
           correct_count: correctCount,
           accuracy,
           total_score: totalScore,
+          active_days: activeDays,
+          by_category: byCategory,
         },
       },
     });

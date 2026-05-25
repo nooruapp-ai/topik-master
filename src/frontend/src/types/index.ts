@@ -91,6 +91,12 @@ export interface LeaderboardEntry {
   user?: { id: string; username: string } | null;
 }
 
+export interface CategoryStat {
+  category: string;
+  total: number;
+  correct: number;
+}
+
 export interface UserStatistics {
   user: User;
   profile: UserProfile | null;
@@ -99,6 +105,8 @@ export interface UserStatistics {
     correct_count: number;
     accuracy: number;
     total_score: number;
+    active_days?: number;
+    by_category?: CategoryStat[];
   };
 }
 
