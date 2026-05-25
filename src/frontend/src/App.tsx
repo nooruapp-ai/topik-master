@@ -8,8 +8,13 @@ import Spinner from './components/Spinner';
 const Login = lazy(() => import('./pages/Login'));
 const Signup = lazy(() => import('./pages/Signup'));
 const Home = lazy(() => import('./pages/Home'));
-const Learning = lazy(() => import('./pages/Learning'));
-const CourseDetail = lazy(() => import('./pages/CourseDetail'));
+// 학습 구조 개편: 레벨 → 영역 → 유형 → 꿀팁 → 풀이 → 완료 플로우
+const LevelSelect = lazy(() => import('./pages/learning/LevelSelect'));
+const CategorySelect = lazy(() => import('./pages/learning/CategorySelect'));
+const TypeList = lazy(() => import('./pages/learning/TypeList'));
+const TypeTips = lazy(() => import('./pages/learning/TypeTips'));
+const ProblemSolve = lazy(() => import('./pages/learning/ProblemSolve'));
+const TypeComplete = lazy(() => import('./pages/learning/TypeComplete'));
 const Test = lazy(() => import('./pages/Test'));
 const League = lazy(() => import('./pages/League'));
 const Community = lazy(() => import('./pages/Community'));
@@ -28,8 +33,12 @@ export default function App() {
         <Route element={<ProtectedRoute />}>
           <Route element={<Layout />}>
             <Route path="/" element={<Home />} />
-            <Route path="/learning" element={<Learning />} />
-            <Route path="/learning/:id" element={<CourseDetail />} />
+            <Route path="/learning" element={<LevelSelect />} />
+            <Route path="/learning/:level" element={<CategorySelect />} />
+            <Route path="/learning/:level/:category" element={<TypeList />} />
+            <Route path="/learning/:level/:category/:typeId" element={<TypeTips />} />
+            <Route path="/learning/:level/:category/:typeId/solve" element={<ProblemSolve />} />
+            <Route path="/learning/:level/:category/:typeId/complete" element={<TypeComplete />} />
             <Route path="/test" element={<Test />} />
             <Route path="/league" element={<League />} />
             <Route path="/community" element={<Community />} />
