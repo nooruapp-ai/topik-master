@@ -1,0 +1,21 @@
+{
+  "name": "topik-master",
+  "version": "1.0.0",
+  "description": "TOPIK 마스터 - 한국어능력시험 학습 앱 (Phase 1)",
+  "private": true,
+  "workspaces": ["src/backend", "src/frontend"],
+  "scripts": {
+    "dev": "concurrently -k -n BE,FE -c blue,green \"npm:dev:backend\" \"npm:dev:frontend\"",
+    "dev:backend": "npm run dev -w src/backend",
+    "dev:frontend": "npm run dev -w src/frontend",
+    "build": "npm run build -w src/backend && npm run build -w src/frontend",
+    "typecheck": "npm run typecheck -w src/backend && npm run typecheck -w src/frontend",
+    "start": "npm run start -w src/backend"
+  },
+  "keywords": ["topik", "korean", "learning", "education"],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

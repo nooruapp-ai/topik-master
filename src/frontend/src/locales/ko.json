@@ -1,0 +1,122 @@
+{
+  "app": {
+    "name": "TOPIK 마스터",
+    "tagline": "한국어 능력시험 합격의 지름길"
+  },
+  "common": {
+    "loading": "불러오는 중...",
+    "error": "오류가 발생했습니다.",
+    "retry": "다시 시도",
+    "save": "저장",
+    "cancel": "취소",
+    "submit": "제출",
+    "close": "닫기",
+    "empty": "표시할 내용이 없습니다.",
+    "level": "{{level}}급"
+  },
+  "nav": {
+    "home": "홈",
+    "learning": "학습",
+    "test": "테스트",
+    "league": "리그",
+    "community": "커뮤니티",
+    "profile": "프로필"
+  },
+  "auth": {
+    "loginTitle": "로그인",
+    "signupTitle": "회원가입",
+    "email": "이메일",
+    "password": "비밀번호",
+    "username": "닉네임",
+    "emailPlaceholder": "you@example.com",
+    "passwordPlaceholder": "6자 이상 입력",
+    "usernamePlaceholder": "사용할 닉네임",
+    "loginButton": "로그인",
+    "signupButton": "가입하기",
+    "noAccount": "아직 계정이 없으신가요?",
+    "haveAccount": "이미 계정이 있으신가요?",
+    "goSignup": "회원가입",
+    "goLogin": "로그인",
+    "loginSuccess": "로그인되었습니다.",
+    "signupSuccess": "회원가입이 완료되었습니다."
+  },
+  "home": {
+    "greeting": "{{name}}님, 환영합니다!",
+    "todayGoal": "오늘의 학습 목표",
+    "continueLearning": "이어서 학습하기",
+    "quickTest": "빠른 테스트",
+    "weeklyRank": "이번 주 랭킹",
+    "streak": "연속 학습 {{days}}일",
+    "totalPoints": "누적 포인트",
+    "recommendedCourses": "추천 강좌"
+  },
+  "learning": {
+    "title": "학습",
+    "subtitle": "단계별 강좌로 실력을 키워보세요",
+    "allLevels": "전체",
+    "lessons": "{{count}}개 레슨",
+    "startCourse": "학습 시작",
+    "empty": "등록된 강좌가 없습니다."
+  },
+  "test": {
+    "title": "테스트",
+    "subtitle": "실전 문제로 실력을 점검하세요",
+    "start": "문제 풀기",
+    "category": {
+      "all": "전체",
+      "listening": "듣기",
+      "reading": "읽기",
+      "writing": "쓰기",
+      "grammar": "문법",
+      "vocabulary": "어휘"
+    },
+    "question": "문제 {{current}} / {{total}}",
+    "correct": "정답입니다! 🎉",
+    "incorrect": "오답입니다.",
+    "correctAnswer": "정답: {{answer}}",
+    "next": "다음 문제",
+    "finish": "결과 보기",
+    "result": "테스트 결과",
+    "scoreSummary": "{{total}}문제 중 {{correct}}문제 정답",
+    "accuracy": "정답률 {{accuracy}}%",
+    "restart": "다시 풀기",
+    "empty": "등록된 문제가 없습니다."
+  },
+  "league": {
+    "title": "리그",
+    "subtitle": "다른 학습자와 경쟁하며 동기부여를 얻으세요",
+    "weekly": "주간 랭킹",
+    "global": "전체 랭킹",
+    "rank": "{{rank}}위",
+    "points": "{{points}}점",
+    "empty": "아직 랭킹 데이터가 없습니다."
+  },
+  "community": {
+    "title": "커뮤니티",
+    "subtitle": "학습자들과 정보를 나눠보세요",
+    "write": "글쓰기",
+    "newPost": "새 글 작성",
+    "postTitle": "제목",
+    "postContent": "내용",
+    "postTitlePlaceholder": "제목을 입력하세요",
+    "postContentPlaceholder": "내용을 입력하세요",
+    "publish": "게시하기",
+    "by": "작성자",
+    "empty": "아직 게시글이 없습니다. 첫 글을 작성해보세요!"
+  },
+  "profile": {
+    "title": "프로필",
+    "statistics": "학습 통계",
+    "totalSubmissions": "푼 문제",
+    "correctCount": "맞힌 문제",
+    "accuracy": "정답률",
+    "totalScore": "총 점수",
+    "logout": "로그아웃",
+    "memberSince": "가입일",
+    "unit": {
+      "count": "개",
+      "percent": "%",
+      "point": "점"
+    }
+  }
+}
