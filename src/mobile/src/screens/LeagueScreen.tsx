@@ -87,7 +87,7 @@ export default function LeagueScreen() {
                 </Text>
                 <Avatar name={entry.user?.username} size="sm" />
                 <Text numberOfLines={1} className="flex-1 text-[15px] font-medium text-ink">
-                  {entry.user?.username ?? '익명'}
+                  {entry.user?.username ?? t('common.anonymous')}
                 </Text>
                 <Text className="text-[15px] font-bold text-primary">
                   {t('league.points', { points: entry.score.toLocaleString() })}

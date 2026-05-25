@@ -183,7 +183,7 @@ export default function CommunityScreen() {
                   {post.content}
                 </Text>
                 <View className="mt-3 flex-row items-center gap-2">
-                  <Text className="text-[12px] text-ink-faint">{post.author?.username ?? '익명'}</Text>
+                  <Text className="text-[12px] text-ink-faint">{post.author?.username ?? t('common.anonymous')}</Text>
                   <Text className="text-[12px] text-ink-faint">·</Text>
                   <Text className="text-[12px] text-ink-faint">{formatDate(post.created_at)}</Text>
                 </View>

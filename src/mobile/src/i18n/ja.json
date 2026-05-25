@@ -1,0 +1,168 @@
+{
+  "app": {
+    "name": "TOPIK マスター",
+    "tagline": "韓国語能力試験 合格への近道"
+  },
+  "common": {
+    "loading": "読み込み中...",
+    "error": "エラーが発生しました。",
+    "retry": "もう一度試す",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "submit": "提出",
+    "close": "閉じる",
+    "empty": "表示する内容がありません。",
+    "level": "{{level}}級",
+    "anonymous": "匿名"
+  },
+  "nav": {
+    "home": "ホーム",
+    "learning": "学習",
+    "test": "テスト",
+    "league": "リーグ",
+    "community": "コミュニティ",
+    "profile": "プロフィール"
+  },
+  "search": {
+    "title": "検索",
+    "placeholder": "講座・問題・投稿を検索",
+    "prompt": "検索キーワードを入力してください。",
+    "recent": "最近の検索",
+    "clear": "消去",
+    "noResults": "「{{q}}」の検索結果がありません。"
+  },
+  "notifications": {
+    "title": "お知らせ",
+    "empty": "新しいお知らせはありません。"
+  },
+  "auth": {
+    "loginTitle": "ログイン",
+    "signupTitle": "新規登録",
+    "email": "メールアドレス",
+    "password": "パスワード",
+    "username": "ニックネーム",
+    "emailPlaceholder": "you@example.com",
+    "passwordPlaceholder": "6文字以上で入力",
+    "usernamePlaceholder": "使用するニックネーム",
+    "loginButton": "ログイン",
+    "signupButton": "登録する",
+    "noAccount": "アカウントをお持ちでないですか?",
+    "haveAccount": "すでにアカウントをお持ちですか?",
+    "goSignup": "新規登録",
+    "goLogin": "ログイン",
+    "loginSuccess": "ログインしました。",
+    "signupSuccess": "新規登録が完了しました。"
+  },
+  "home": {
+    "greeting": "{{name}}さん、ようこそ!",
+    "todayGoal": "今日の学習目標",
+    "continueLearning": "学習を続ける",
+    "quickTest": "クイックテスト",
+    "weeklyRank": "今週のランキング",
+    "streak": "連続学習 {{days}}日",
+    "totalPoints": "累計ポイント",
+    "level": "レベル {{level}}",
+    "recommendedCourses": "おすすめ講座"
+  },
+  "learning": {
+    "title": "学習",
+    "subtitle": "段階別の講座で実力を伸ばしましょう",
+    "allLevels": "すべて",
+    "lessons": "{{count}}個のレッスン",
+    "startCourse": "学習開始",
+    "progress": "進捗",
+    "lessonList": "レッスン一覧",
+    "completed": "完了したレッスン",
+    "back": "講座一覧",
+    "empty": "登録された講座がありません。"
+  },
+  "test": {
+    "title": "テスト",
+    "subtitle": "実戦問題で実力をチェックしましょう",
+    "start": "問題を解く",
+    "category": {
+      "all": "すべて",
+      "listening": "聞き取り",
+      "reading": "読解",
+      "writing": "作文",
+      "grammar": "文法",
+      "vocabulary": "語彙"
+    },
+    "question": "問題 {{current}} / {{total}}",
+    "correct": "正解です! 🎉",
+    "incorrect": "不正解です。",
+    "correctAnswer": "正解: {{answer}}",
+    "next": "次の問題",
+    "finish": "結果を見る",
+    "result": "テスト結果",
+    "scoreSummary": "{{total}}問中 {{correct}}問正解",
+    "accuracy": "正答率 {{accuracy}}%",
+    "restart": "もう一度解く",
+    "empty": "登録された問題がありません。"
+  },
+  "league": {
+    "title": "リーグ",
+    "subtitle": "他の学習者と競い合ってモチベーションを高めましょう",
+    "weekly": "週間ランキング",
+    "global": "総合ランキング",
+    "rank": "{{rank}}位",
+    "points": "{{points}}点",
+    "empty": "まだランキングデータがありません。"
+  },
+  "community": {
+    "title": "コミュニティ",
+    "subtitle": "学習者同士で情報を共有しましょう",
+    "write": "投稿する",
+    "newPost": "新規投稿",
+    "postTitle": "タイトル",
+    "postContent": "内容",
+    "postTitlePlaceholder": "タイトルを入力してください",
+    "postContentPlaceholder": "内容を入力してください",
+    "publish": "投稿する",
+    "category": "カテゴリー",
+    "edit": "編集",
+    "delete": "削除",
+    "update": "編集完了",
+    "back": "一覧へ",
+    "deleteConfirm": "この投稿を削除しますか?",
+    "like": "いいね",
+    "comments": "コメント",
+    "commentPlaceholder": "コメントを入力してください",
+    "addComment": "登録",
+    "noComments": "最初のコメントを残してみましょう。",
+    "deleteCommentConfirm": "コメントを削除しますか?",
+    "categoryFilter": {
+      "all": "すべて",
+      "free": "自由",
+      "question": "質問",
+      "tip": "コツ"
+    },
+    "by": "投稿者",
+    "empty": "まだ投稿がありません。最初の投稿をしてみましょう!"
+  },
+  "profile": {
+    "title": "プロフィール",
+    "statistics": "学習統計",
+    "totalSubmissions": "解いた問題",
+    "correctCount": "正解した問題",
+    "accuracy": "正答率",
+    "totalScore": "合計スコア",
+    "logout": "ログアウト",
+    "memberSince": "登録日",
+    "tabStats": "統計",
+    "tabSaved": "保存済み",
+    "savedEmpty": "保存したコンテンツがありません。",
+    "studyTime": "推定学習時間",
+    "byCategory": "分野別の解答・正解",
+    "noData": "まだデータがありません。問題を解いてみましょう!",
+    "language": "言語",
+    "langKo": "韓国語",
+    "langJa": "日本語",
+    "unit": {
+      "count": "問",
+      "percent": "%",
+      "point": "点",
+      "minute": "分"
+    }
+  }
+}

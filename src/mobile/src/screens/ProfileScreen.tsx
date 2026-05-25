@@ -14,6 +14,7 @@ import Avatar from '../components/ui/Avatar';
 import Badge from '../components/ui/Badge';
 import EmptyState from '../components/ui/EmptyState';
 import Spinner from '../components/ui/Spinner';
+import { setLanguage } from '../i18n';
 
 const activeSegmentShadow = {
   shadowColor: '#000000',
@@ -24,7 +25,7 @@ const activeSegmentShadow = {
 } as const;
 
 export default function ProfileScreen() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { user, logout } = useAuth();
 
   const [tab, setTab] = useState<'stats' | 'saved'>('stats');
@@ -217,9 +218,35 @@ export default function ProfileScreen() {
           </View>
         )}
 
+        {/* 언어 설정 */}
+        <View className="mt-8">
+          <Text className="mb-2 text-[13px] font-medium text-ink-soft">{t('profile.language')}</Text>
+          <View className="flex-row gap-1 rounded-xl bg-surface-muted p-1">
+            {(['ja', 'ko'] as const).map((lng) => {
+              const active = i18n.language === lng;
+              return (
+                <Pressable
+                  key={lng}
+                  onPress={() => setLanguage(lng)}
+                  className={`flex-1 rounded-lg py-2.5 ${active ? 'bg-white' : ''}`}
+                  style={active ? activeSegmentShadow : undefined}
+                >
+                  <Text
+                    className={`text-center text-[14px] font-semibold ${
+                      active ? 'text-primary' : 'text-ink-soft'
+                    }`}
+                  >
+                    {lng === 'ja' ? t('profile.langJa') : t('profile.langKo')}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </View>
+        </View>
+
         <Pressable
           onPress={logout}
-          className="mt-8 h-[52px] flex-row items-center justify-center gap-2 rounded-btn border border-error/30 bg-white active:opacity-90"
+          className="mt-3 h-[52px] flex-row items-center justify-center gap-2 rounded-btn border border-error/30 bg-white active:opacity-90"
         >
           <LogOut size={18} color="#EF4444" strokeWidth={1.75} />
           <Text className="text-[16px] font-semibold text-error">{t('profile.logout')}</Text>
