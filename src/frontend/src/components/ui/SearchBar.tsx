@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Search as SearchIcon } from 'lucide-react';
+import { addRecentSearch } from '../../lib/recentSearches';
 
 interface SearchBarProps {
   initial?: string;
@@ -15,7 +16,9 @@ export default function SearchBar({ initial = '' }: SearchBarProps) {
   function submit(e: FormEvent) {
     e.preventDefault();
     const term = q.trim();
-    if (term) navigate(`/search?q=${encodeURIComponent(term)}`);
+    if (!term) return;
+    addRecentSearch(term);
+    navigate(`/search?q=${encodeURIComponent(term)}`);
   }
 
   return (

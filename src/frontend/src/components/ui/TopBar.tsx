@@ -1,5 +1,5 @@
-import { useNavigate } from 'react-router-dom';
-import { ChevronLeft } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { ChevronLeft, Search } from 'lucide-react';
 import type { ReactNode } from 'react';
 import NotificationBell from './NotificationBell';
 
@@ -8,9 +8,16 @@ interface TopBarProps {
   showBack?: boolean;
   right?: ReactNode;
   showBell?: boolean;
+  showSearch?: boolean;
 }
 
-export default function TopBar({ title, showBack = false, right, showBell = true }: TopBarProps) {
+export default function TopBar({
+  title,
+  showBack = false,
+  right,
+  showBell = true,
+  showSearch = true,
+}: TopBarProps) {
   const navigate = useNavigate();
 
   return (
@@ -25,7 +32,22 @@ export default function TopBar({ title, showBack = false, right, showBell = true
         </button>
       )}
       {title && <h1 className="text-title-m text-ink">{title}</h1>}
-      <div className="ml-auto">{right ?? (showBell ? <NotificationBell /> : null)}</div>
+      <div className="ml-auto flex items-center gap-1">
+        {right ?? (
+          <>
+            {showSearch && (
+              <Link
+                to="/search"
+                aria-label="검색"
+                className="flex h-10 w-10 items-center justify-center text-ink"
+              >
+                <Search size={22} strokeWidth={1.75} />
+              </Link>
+            )}
+            {showBell && <NotificationBell />}
+          </>
+        )}
+      </div>
     </header>
   );
 }
