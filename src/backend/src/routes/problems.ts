@@ -26,7 +26,30 @@ router.get(
       throw new AppError(error.message || '문제 목록을 불러오지 못했습니다.', 500);
     }
 
-    res.json({ success: true, data: data ?? [] });
+    let rows = data ?? [];
+
+    // 폴백: 특정 type_id에 연결된 문제가 아직 없으면, 그 유형의 category + level 범위로 재조회
+    if (rows.length === 0 && typeof type_id === 'string' && type_id) {
+      const { data: tp } = await supabase
+        .from('problem_types')
+        .select('category, level')
+        .eq('id', type_id)
+        .maybeSingle();
+      if (tp) {
+        const levelRange =
+          tp.level === 'topik1' ? [1, 2] : tp.level === 'topik2_mid' ? [3, 4] : [5, 6];
+        const { data: fb } = await supabase
+          .from('problems')
+          .select('*')
+          .eq('category', tp.category)
+          .in('level', levelRange)
+          .order('created_at', { ascending: true })
+          .limit(take);
+        rows = fb ?? [];
+      }
+    }
+
+    res.json({ success: true, data: rows });
   })
 );
 

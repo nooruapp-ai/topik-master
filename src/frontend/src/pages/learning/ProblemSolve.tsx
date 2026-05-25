@@ -48,9 +48,12 @@ export default function ProblemSolve() {
     setLoading(true);
     setError('');
     Promise.all([getProblems({ type_id: typeId, limit: 10 }), getProblemType(typeId)])
-      .then(([probs, tp]) => {
+      .then(async ([probs, tp]) => {
         if (!active) return;
-        setProblems(probs);
+        // 폴백: 이 유형에 연결된 문제가 0건이면 같은 category 문제로 재시도
+        const list = probs.length === 0 && category ? await getProblems({ category, limit: 10 }) : probs;
+        if (!active) return;
+        setProblems(list);
         setType(tp);
         startRef.current = Date.now();
       })
