@@ -16,6 +16,7 @@ import { useAuth } from '../context/AuthContext';
 import { getUserStatistics } from '../api/users';
 import { getBookmarks } from '../api/bookmarks';
 import { getAdminMe } from '../api/admin';
+import WeaknessReport from '../components/WeaknessReport';
 import { getErrorMessage } from '../api/client';
 import type { UserStatistics, SearchResults } from '../types';
 import Spinner from '../components/Spinner';
@@ -30,7 +31,7 @@ export default function Profile() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
-  const [tab, setTab] = useState<'stats' | 'saved'>('stats');
+  const [tab, setTab] = useState<'stats' | 'saved' | 'analysis'>('stats');
   const [stats, setStats] = useState<UserStatistics | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -111,21 +112,23 @@ export default function Profile() {
           </div>
         </header>
 
-        <div className="mb-5 grid grid-cols-2 gap-1 rounded-xl bg-surface-muted p-1">
-          {(['stats', 'saved'] as const).map((tk) => (
+        <div className="mb-5 grid grid-cols-3 gap-1 rounded-xl bg-surface-muted p-1">
+          {(['stats', 'saved', 'analysis'] as const).map((tk) => (
             <button
               key={tk}
               onClick={() => setTab(tk)}
-              className={`rounded-lg py-2.5 text-[14px] font-semibold transition-colors duration-200 ${
+              className={`rounded-lg py-2.5 text-[13px] font-semibold transition-colors duration-200 ${
                 tab === tk ? 'bg-white text-primary shadow-card' : 'text-ink-soft'
               }`}
             >
-              {tk === 'stats' ? t('profile.tabStats') : t('profile.tabSaved')}
+              {tk === 'stats' ? t('profile.tabStats') : tk === 'saved' ? t('profile.tabSaved') : '분석'}
             </button>
           ))}
         </div>
 
-        {tab === 'stats' ? (
+        {tab === 'analysis' ? (
+          user ? <WeaknessReport userId={user.id} /> : null
+        ) : tab === 'stats' ? (
           loading ? (
             <Spinner />
           ) : (

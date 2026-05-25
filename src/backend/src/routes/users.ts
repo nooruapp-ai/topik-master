@@ -2,8 +2,20 @@ import { Router } from 'express';
 import { supabase } from '../config/supabase';
 import { asyncHandler } from '../utils/asyncHandler';
 import { AppError } from '../middleware/errorHandler';
+import { authenticate } from '../middleware/auth';
+import { AuthRequest } from '../types';
+import { computeWeaknesses, recommendProblems } from '../services/analytics';
 
 const router = Router();
+
+// 본인 데이터만 조회 가능하도록 보장
+function ensureSelf(req: AuthRequest): string {
+  const userId = req.params.id;
+  if (req.user?.userId !== userId) {
+    throw new AppError('본인의 데이터만 조회할 수 있습니다.', 403);
+  }
+  return userId;
+}
 
 /** GET /api/users/:id/statistics */
 router.get(
@@ -74,6 +86,41 @@ router.get(
         },
       },
     });
+  })
+);
+
+/** GET /api/users/:id/weaknesses — 약점/강점 분석 (본인 전용) */
+router.get(
+  '/:id/weaknesses',
+  authenticate,
+  asyncHandler<AuthRequest>(async (req, res) => {
+    const userId = ensureSelf(req);
+    const data = await computeWeaknesses(userId);
+    res.json({ success: true, data });
+  })
+);
+
+/** GET /api/users/:id/recommendations — 약점 우선 추천 문제 (본인 전용) */
+router.get(
+  '/:id/recommendations',
+  authenticate,
+  asyncHandler<AuthRequest>(async (req, res) => {
+    const userId = ensureSelf(req);
+    const limit = typeof req.query.limit === 'string' ? Math.min(Number(req.query.limit) || 5, 20) : 5;
+    const data = await recommendProblems(userId, limit);
+    res.json({ success: true, data });
+  })
+);
+
+/** GET /api/users/:id/dashboard — 약점 + 추천 종합 (본인 전용) */
+router.get(
+  '/:id/dashboard',
+  authenticate,
+  asyncHandler<AuthRequest>(async (req, res) => {
+    const userId = ensureSelf(req);
+    const weaknesses = await computeWeaknesses(userId);
+    const recommendations = await recommendProblems(userId, 5);
+    res.json({ success: true, data: { weaknesses, recommendations } });
   })
 );
 

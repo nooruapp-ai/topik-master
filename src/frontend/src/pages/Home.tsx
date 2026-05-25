@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { BookOpen, PencilLine, Flame } from 'lucide-react';
+import { BookOpen, PencilLine, Flame, Target, ChevronRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { getUserStatistics } from '../api/users';
+import { getRecommendations, type Recommendations } from '../api/analytics';
 import type { UserStatistics } from '../types';
 import Spinner from '../components/Spinner';
 import SearchBar from '../components/ui/SearchBar';
@@ -13,6 +14,7 @@ export default function Home() {
   const { t } = useTranslation();
   const { user } = useAuth();
   const [stats, setStats] = useState<UserStatistics | null>(null);
+  const [rec, setRec] = useState<Recommendations | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -28,6 +30,12 @@ export default function Home() {
       }
     }
     void load();
+    // 약점 추천 (best-effort) — 데이터 없으면 카드 미표시
+    if (user) {
+      getRecommendations(user.id)
+        .then((r) => active && setRec(r))
+        .catch(() => undefined);
+    }
     return () => {
       active = false;
     };
@@ -91,6 +99,23 @@ export default function Home() {
           <p className="text-[16px] font-semibold text-ink">{t('home.quickTest')}</p>
         </Link>
       </section>
+
+      {rec?.weak_category && rec.problems.length > 0 && (
+        <Link to="/learning" className="mt-8 block">
+          <section className="flex items-center gap-4 rounded-card border border-primary/30 bg-primary-light p-5 transition-transform duration-200 ease-ios active:scale-[0.99]">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary text-white">
+              <Target size={22} strokeWidth={1.9} />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-[15px] font-bold text-primary">오늘의 약점 보충 학습</p>
+              <p className="mt-0.5 text-[13px] text-primary-dark">
+                {t(`test.category.${rec.weak_category}`, rec.weak_category)} 영역 {rec.problems.length}문제 추천
+              </p>
+            </div>
+            <ChevronRight size={20} strokeWidth={1.9} className="shrink-0 text-primary" />
+          </section>
+        </Link>
+      )}
     </div>
   );
 }
