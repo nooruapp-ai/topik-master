@@ -8,6 +8,7 @@ import authRoutes from './routes/auth';
 import coursesRoutes from './routes/courses';
 import problemsRoutes from './routes/problems';
 import problemTypesRoutes from './routes/problemTypes';
+import vocabularyRoutes from './routes/vocabulary';
 import submissionsRoutes from './routes/submissions';
 import postsRoutes from './routes/posts';
 import commentsRoutes from './routes/comments';
@@ -36,6 +37,7 @@ app.use('/api/auth', authRoutes);
 // 공개 읽기 라우트는 짧은 캐시를 적용
 app.use('/api/courses', publicCache(120), coursesRoutes);
 app.use('/api/problem-types', publicCache(120), problemTypesRoutes);
+app.use('/api/vocabulary', publicCache(300), vocabularyRoutes);
 app.use('/api/problems', publicCache(120), problemsRoutes);
 app.use('/api/search', publicCache(30), searchRoutes);
 app.use('/api/submissions', submissionsRoutes);

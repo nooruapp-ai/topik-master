@@ -52,6 +52,19 @@ export interface Problem {
   review_tip?: string | null;
 }
 
+export interface Vocabulary {
+  id: string;
+  word: string;
+  level: number;
+  pos?: string | null;
+  theme?: string | null;
+  meaning: string;
+  example?: string | null;
+  pronunciation?: string | null;
+  frequency?: number | null;
+  hanja?: string | null;
+}
+
 export type TopikLevel = 'topik1' | 'topik2_mid' | 'topik2_high';
 
 export interface ProblemType {
