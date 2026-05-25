@@ -39,7 +39,7 @@ export default function BookmarkButton({ type, id }: BookmarkButtonProps) {
       onClick={onClick}
       disabled={busy}
       aria-label="북마크"
-      className={`flex h-10 w-10 items-center justify-center rounded-full transition-colors duration-200 ${
+      className={`flex h-11 w-11 items-center justify-center rounded-full transition-colors duration-200 ${
         saved ? 'text-primary' : 'text-ink-faint'
       }`}
     >

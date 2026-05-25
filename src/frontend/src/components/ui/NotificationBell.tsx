@@ -21,7 +21,7 @@ export default function NotificationBell() {
     <Link
       to="/notifications"
       aria-label="알림"
-      className="relative flex h-10 w-10 items-center justify-center text-ink"
+      className="relative flex h-11 w-11 items-center justify-center text-ink"
     >
       <Bell size={22} strokeWidth={1.75} />
       {count > 0 && (

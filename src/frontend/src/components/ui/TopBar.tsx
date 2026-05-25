@@ -26,7 +26,7 @@ export default function TopBar({
         <button
           onClick={() => navigate(-1)}
           aria-label="뒤로"
-          className="-ml-2 flex h-10 w-10 items-center justify-center text-ink"
+          className="-ml-2 flex h-11 w-11 items-center justify-center text-ink"
         >
           <ChevronLeft size={24} strokeWidth={1.75} />
         </button>
@@ -39,7 +39,7 @@ export default function TopBar({
               <Link
                 to="/search"
                 aria-label="검색"
-                className="flex h-10 w-10 items-center justify-center text-ink"
+                className="flex h-11 w-11 items-center justify-center text-ink"
               >
                 <Search size={22} strokeWidth={1.75} />
               </Link>
