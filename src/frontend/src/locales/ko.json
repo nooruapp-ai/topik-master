@@ -57,6 +57,10 @@
     "allLevels": "전체",
     "lessons": "{{count}}개 레슨",
     "startCourse": "학습 시작",
+    "progress": "진도",
+    "lessonList": "레슨 목록",
+    "completed": "완료한 레슨",
+    "back": "강좌 목록",
     "empty": "등록된 강좌가 없습니다."
   },
   "test": {

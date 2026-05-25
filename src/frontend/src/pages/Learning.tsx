@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { getCourses } from '../api/courses';
 import { getErrorMessage } from '../api/client';
@@ -76,9 +77,12 @@ export default function Learning() {
               {course.description && (
                 <p className="mt-1 text-sm text-gray-500">{course.description}</p>
               )}
-              <button className="mt-3 w-full rounded-xl bg-primary py-2.5 text-sm font-semibold text-white transition active:scale-[.99]">
+              <Link
+                to={`/learning/${course.id}`}
+                className="mt-3 block w-full rounded-xl bg-primary py-2.5 text-center text-sm font-semibold text-white transition active:scale-[.99]"
+              >
                 {t('learning.startCourse')}
-              </button>
+              </Link>
             </li>
           ))}
         </ul>

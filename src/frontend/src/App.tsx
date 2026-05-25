@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Home from './pages/Home';
 import Learning from './pages/Learning';
+import CourseDetail from './pages/CourseDetail';
 import Test from './pages/Test';
 import League from './pages/League';
 import Community from './pages/Community';
@@ -21,6 +22,7 @@ export default function App() {
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
           <Route path="/learning" element={<Learning />} />
+          <Route path="/learning/:id" element={<CourseDetail />} />
           <Route path="/test" element={<Test />} />
           <Route path="/league" element={<League />} />
           <Route path="/community" element={<Community />} />

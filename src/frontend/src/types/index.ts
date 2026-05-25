@@ -73,6 +73,16 @@ export interface Comment {
   created_at: string;
 }
 
+export interface UserProgress {
+  id: string;
+  user_id: string;
+  course_id: string | null;
+  lesson_id: string | null;
+  status: string;
+  progress_percent: number;
+  completed_at?: string | null;
+}
+
 export interface LeaderboardEntry {
   id: string;
   rank: number;
