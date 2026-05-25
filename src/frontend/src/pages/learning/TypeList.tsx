@@ -59,7 +59,7 @@ export default function TypeList() {
               <li key={tp.id}>
                 <Card>
                   <div className="mb-2 flex items-center gap-2">
-                    <Badge tone="primary">{`유형 ${tp.type_number}`}</Badge>
+                    <Badge tone="primary">{t('learn.typeNumber', { n: tp.type_number })}</Badge>
                     {tp.question_numbers && (
                       <span className="text-[12px] text-ink-faint">{tp.question_numbers}</span>
                     )}

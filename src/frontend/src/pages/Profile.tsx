@@ -17,6 +17,7 @@ import { getUserStatistics } from '../api/users';
 import { getBookmarks } from '../api/bookmarks';
 import { getAdminMe } from '../api/admin';
 import WeaknessReport from '../components/WeaknessReport';
+import { setLanguage } from '../i18n';
 import { getErrorMessage } from '../api/client';
 import type { UserStatistics, SearchResults } from '../types';
 import Spinner from '../components/Spinner';
@@ -27,7 +28,7 @@ import Badge from '../components/ui/Badge';
 import EmptyState from '../components/ui/EmptyState';
 
 export default function Profile() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -121,7 +122,11 @@ export default function Profile() {
                 tab === tk ? 'bg-white text-primary shadow-card' : 'text-ink-soft'
               }`}
             >
-              {tk === 'stats' ? t('profile.tabStats') : tk === 'saved' ? t('profile.tabSaved') : '분석'}
+              {tk === 'stats'
+                ? t('profile.tabStats')
+                : tk === 'saved'
+                  ? t('profile.tabSaved')
+                  : t('profile.tabAnalysis')}
             </button>
           ))}
         </div>
@@ -198,21 +203,37 @@ export default function Profile() {
           </div>
         )}
 
+        {/* 언어 설정 */}
+        <div className="mt-8">
+          <p className="mb-2 text-[13px] font-medium text-ink-soft">{t('profile.language')}</p>
+          <div className="grid grid-cols-2 gap-1 rounded-xl bg-surface-muted p-1">
+            {(['ja', 'ko'] as const).map((lng) => (
+              <button
+                key={lng}
+                onClick={() => setLanguage(lng)}
+                className={`rounded-lg py-2.5 text-[14px] font-semibold transition-colors duration-200 ${
+                  i18n.language === lng ? 'bg-white text-primary shadow-card' : 'text-ink-soft'
+                }`}
+              >
+                {lng === 'ja' ? t('profile.langJa') : t('profile.langKo')}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {isAdmin && (
           <Link
             to="/admin"
-            className="mt-8 flex h-[52px] w-full items-center justify-center gap-2 rounded-btn border border-primary/30 bg-primary-light text-[16px] font-semibold text-primary transition-transform duration-200 ease-ios active:scale-[0.98]"
+            className="mt-3 flex h-[52px] w-full items-center justify-center gap-2 rounded-btn border border-primary/30 bg-primary-light text-[16px] font-semibold text-primary transition-transform duration-200 ease-ios active:scale-[0.98]"
           >
             <ShieldCheck size={18} strokeWidth={1.75} />
-            관리자 콘솔
+            {t('profile.adminConsole')}
           </Link>
         )}
 
         <button
           onClick={handleLogout}
-          className={`flex h-[52px] w-full items-center justify-center gap-2 rounded-btn border border-error/30 bg-white text-[16px] font-semibold text-error transition-transform duration-200 ease-ios active:scale-[0.98] ${
-            isAdmin ? 'mt-3' : 'mt-8'
-          }`}
+          className="mt-3 flex h-[52px] w-full items-center justify-center gap-2 rounded-btn border border-error/30 bg-white text-[16px] font-semibold text-error transition-transform duration-200 ease-ios active:scale-[0.98]"
         >
           <LogOut size={18} strokeWidth={1.75} />
           {t('profile.logout')}

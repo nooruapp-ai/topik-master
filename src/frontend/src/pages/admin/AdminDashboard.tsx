@@ -9,11 +9,7 @@ import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import Spinner from '../../components/Spinner';
 
-const GEN_LEVELS = [
-  { value: 'topik1', label: 'TOPIK I' },
-  { value: 'topik2_mid', label: 'TOPIK II 중급' },
-  { value: 'topik2_high', label: 'TOPIK II 고급' },
-];
+const GEN_LEVELS = ['topik1', 'topik2_mid', 'topik2_high'];
 const GEN_CATEGORIES = ['grammar', 'vocabulary', 'reading', 'listening', 'writing'];
 
 export default function AdminDashboard() {
@@ -49,7 +45,7 @@ export default function AdminDashboard() {
         category: genCategory,
         count: genCount,
       });
-      setGenMsg(`${created}개 문제가 생성되어 검토 대기에 추가되었습니다.`);
+      setGenMsg(t('admin.generatedMsg', { count: created }));
       try {
         setStats(await getProblemStats());
       } catch {
@@ -64,17 +60,17 @@ export default function AdminDashboard() {
 
   const cards = stats
     ? [
-        { label: '전체 문제', value: stats.total, tone: 'text-ink' },
-        { label: '검토 대기', value: stats.pending, tone: 'text-warning' },
-        { label: '승인됨', value: stats.approved, tone: 'text-success' },
-        { label: '거부됨', value: stats.rejected, tone: 'text-error' },
-        { label: 'AI 생성', value: stats.ai_generated, tone: 'text-primary' },
+        { key: 'statTotal', value: stats.total, tone: 'text-ink' },
+        { key: 'statPending', value: stats.pending, tone: 'text-warning' },
+        { key: 'statApproved', value: stats.approved, tone: 'text-success' },
+        { key: 'statRejected', value: stats.rejected, tone: 'text-error' },
+        { key: 'statAi', value: stats.ai_generated, tone: 'text-primary' },
       ]
     : [];
 
   return (
     <div className="mx-auto min-h-screen max-w-mobile bg-surface-soft">
-      <TopBar title="관리자 대시보드" showBack showSearch={false} showBell={false} />
+      <TopBar title={t('admin.dashboard')} showBack showSearch={false} showBell={false} />
       <div className="px-5 pb-12 pt-2">
         {loading ? (
           <Spinner />
@@ -84,8 +80,8 @@ export default function AdminDashboard() {
           <>
             <div className="grid grid-cols-2 gap-4">
               {cards.map((c) => (
-                <Card key={c.label}>
-                  <p className="text-[14px] text-ink-soft">{c.label}</p>
+                <Card key={c.key}>
+                  <p className="text-[14px] text-ink-soft">{t(`admin.${c.key}`)}</p>
                   <p className={`mt-1 text-2xl font-bold ${c.tone}`}>{c.value.toLocaleString()}</p>
                 </Card>
               ))}
@@ -94,9 +90,9 @@ export default function AdminDashboard() {
             <button onClick={() => navigate('/admin/review')} className="mt-6 w-full text-left">
               <Card className="flex items-center gap-3 transition-transform duration-200 ease-ios active:scale-[0.99]">
                 <div className="min-w-0 flex-1">
-                  <p className="text-[16px] font-semibold text-ink">검토 대기 문제</p>
+                  <p className="text-[16px] font-semibold text-ink">{t('admin.reviewWaiting')}</p>
                   <p className="mt-0.5 text-[13px] text-ink-soft">
-                    {stats.pending}건의 문제가 검토를 기다리고 있어요.
+                    {t('admin.reviewWaitingDesc', { count: stats.pending })}
                   </p>
                 </div>
                 <ChevronRight size={20} strokeWidth={1.75} className="shrink-0 text-ink-faint" />
@@ -106,25 +102,29 @@ export default function AdminDashboard() {
             {/* AI 문제 생성 */}
             <div className="mb-2 mt-8 flex items-center gap-2">
               <Bot size={20} strokeWidth={1.9} className="text-primary" />
-              <h2 className="text-title-m text-ink">AI 문제 생성</h2>
+              <h2 className="text-title-m text-ink">{t('admin.aiGenerate')}</h2>
             </div>
             <Card className="space-y-3">
               <div>
-                <label className="mb-1 block text-[13px] font-medium text-ink-soft">레벨</label>
+                <label className="mb-1 block text-[13px] font-medium text-ink-soft">
+                  {t('admin.genLevel')}
+                </label>
                 <select
                   value={genLevel}
                   onChange={(e) => setGenLevel(e.target.value)}
                   className="h-[44px] w-full rounded-xl border border-line bg-white px-3 text-[15px] outline-none focus:border-primary"
                 >
                   {GEN_LEVELS.map((l) => (
-                    <option key={l.value} value={l.value}>
-                      {l.label}
+                    <option key={l} value={l}>
+                      {t(`learn.levelTitle.${l}`)}
                     </option>
                   ))}
                 </select>
               </div>
               <div>
-                <label className="mb-1 block text-[13px] font-medium text-ink-soft">영역</label>
+                <label className="mb-1 block text-[13px] font-medium text-ink-soft">
+                  {t('admin.genCategory')}
+                </label>
                 <select
                   value={genCategory}
                   onChange={(e) => setGenCategory(e.target.value)}
@@ -138,7 +138,9 @@ export default function AdminDashboard() {
                 </select>
               </div>
               <div>
-                <label className="mb-1 block text-[13px] font-medium text-ink-soft">생성 개수</label>
+                <label className="mb-1 block text-[13px] font-medium text-ink-soft">
+                  {t('admin.genCount')}
+                </label>
                 <input
                   type="number"
                   min={1}
@@ -150,12 +152,12 @@ export default function AdminDashboard() {
               </div>
               {genMsg && <p className="text-[13px] text-primary">{genMsg}</p>}
               <Button onClick={handleGenerate} disabled={genBusy}>
-                {genBusy ? '생성 중...' : '생성하기'}
+                {genBusy ? t('admin.generating') : t('admin.generate')}
               </Button>
             </Card>
 
             <Button onClick={() => navigate('/admin/review')} className="mt-6">
-              검토 시작하기
+              {t('admin.startReview')}
             </Button>
           </>
         ) : null}

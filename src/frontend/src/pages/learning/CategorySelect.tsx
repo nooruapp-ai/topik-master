@@ -17,7 +17,6 @@ import TopBar from '../../components/ui/TopBar';
 import Card from '../../components/ui/Card';
 import Spinner from '../../components/Spinner';
 import EmptyState from '../../components/ui/EmptyState';
-import { levelTitle } from './levels';
 
 const CATEGORY_META: Record<string, { icon: LucideIcon; chip: string; color: string }> = {
   listening: { icon: Headphones, chip: 'bg-primary-light', color: 'text-primary' },
@@ -59,7 +58,7 @@ export default function CategorySelect() {
 
   return (
     <div>
-      <TopBar title={levelTitle(level)} showBack showSearch={false} showBell={false} />
+      <TopBar title={t(`learn.levelTitle.${level}`, level)} showBack showSearch={false} showBell={false} />
       <div className="px-5 pt-2">
         <p className="mb-5 text-[14px] text-ink-soft">{t('learn.selectCategory')}</p>
 

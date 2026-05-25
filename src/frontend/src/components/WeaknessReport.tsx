@@ -53,11 +53,12 @@ export default function WeaknessReport({ userId }: { userId: string }) {
     0;
 
   if (!hasData) {
-    return <EmptyState emoji="📊" title="아직 분석할 데이터가 없어요. 문제를 풀어보세요!" />;
+    return <EmptyState emoji="📊" title={t('analysis.noData')} />;
   }
 
   const catLabel = (c: string) => t(`test.category.${c}`, c);
-  const chartData = weak.weak_categories.map((c) => ({ name: catLabel(c.category), 정답률: c.accuracy }));
+  const accuracyKey = t('analysis.accuracyKey');
+  const chartData = weak.weak_categories.map((c) => ({ name: catLabel(c.category), [accuracyKey]: c.accuracy }));
   const weakTags = [...weak.weak_grammar, ...weak.weak_vocabulary].slice(0, 6);
 
   return (
@@ -67,13 +68,13 @@ export default function WeaknessReport({ userId }: { userId: string }) {
         <Card className="border-primary/30 bg-primary-light">
           <div className="mb-1 flex items-center gap-1.5">
             <Target size={18} strokeWidth={2} className="text-primary" />
-            <p className="text-[14px] font-bold text-primary">추천 학습</p>
+            <p className="text-[14px] font-bold text-primary">{t('analysis.recommend')}</p>
           </div>
           <p className="text-[15px] text-primary-dark">
-            {catLabel(rec.weak_category)} 영역이 약해요. 집중 보충 학습을 추천합니다!
+            {t('analysis.weakMsg', { category: catLabel(rec.weak_category) })}
           </p>
           <Button onClick={() => navigate('/learning')} className="mt-3">
-            약점 보충 학습 시작 ({rec.problems.length}문제)
+            {t('analysis.startWeak', { count: rec.problems.length })}
           </Button>
         </Card>
       )}
@@ -83,12 +84,12 @@ export default function WeaknessReport({ userId }: { userId: string }) {
         <div>
           <div className="mb-3 flex items-center gap-2">
             <TrendingDown size={18} strokeWidth={2} className="text-error" />
-            <h3 className="text-title-m text-ink">약점 영역</h3>
+            <h3 className="text-title-m text-ink">{t('analysis.weakAreas')}</h3>
           </div>
           <div className="flex flex-wrap gap-2">
             {weakTags.map((tg) => (
               <Badge key={tg.tag} tone="coral">
-                {tg.tag} {tg.wrong}회 틀림
+                {tg.tag} {t('analysis.wrongCount', { count: tg.wrong })}
               </Badge>
             ))}
           </div>
@@ -100,7 +101,7 @@ export default function WeaknessReport({ userId }: { userId: string }) {
         <div>
           <div className="mb-3 flex items-center gap-2">
             <TrendingUp size={18} strokeWidth={2} className="text-success" />
-            <h3 className="text-title-m text-ink">강점 영역</h3>
+            <h3 className="text-title-m text-ink">{t('analysis.strongAreas')}</h3>
           </div>
           <div className="flex flex-wrap gap-2">
             {weak.strong_areas.map((c) => (
@@ -115,7 +116,7 @@ export default function WeaknessReport({ userId }: { userId: string }) {
       {/* 영역별 정답률 차트 */}
       {chartData.length > 0 && (
         <div>
-          <h3 className="mb-3 text-title-m text-ink">영역별 정답률</h3>
+          <h3 className="mb-3 text-title-m text-ink">{t('analysis.byCategory')}</h3>
           <Card>
             <ResponsiveContainer width="100%" height={220}>
               <BarChart data={chartData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
@@ -123,7 +124,7 @@ export default function WeaknessReport({ userId }: { userId: string }) {
                 <XAxis dataKey="name" tick={{ fontSize: 12, fill: '#6B7280' }} />
                 <YAxis domain={[0, 100]} tick={{ fontSize: 12, fill: '#9CA3AF' }} />
                 <Tooltip />
-                <Bar dataKey="정답률" fill="#6366F1" radius={[4, 4, 0, 0]} />
+                <Bar dataKey={accuracyKey} fill="#6366F1" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </Card>

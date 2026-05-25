@@ -156,7 +156,7 @@ export default function Community() {
                     <p className="text-[16px] font-semibold text-ink">{post.title}</p>
                     <p className="mt-1 line-clamp-2 text-[14px] text-ink-soft">{post.content}</p>
                     <div className="mt-3 flex items-center gap-2 text-[12px] text-ink-faint">
-                      <span>{post.author?.username ?? '익명'}</span>
+                      <span>{post.author?.username ?? t('common.anonymous')}</span>
                       <span>·</span>
                       <span>{formatDate(post.created_at)}</span>
                     </div>

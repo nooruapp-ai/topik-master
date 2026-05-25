@@ -72,7 +72,7 @@ export default function League() {
                   </span>
                   <Avatar name={entry.user?.username} size="sm" />
                   <p className="flex-1 truncate text-[15px] font-medium text-ink">
-                    {entry.user?.username ?? '익명'}
+                    {entry.user?.username ?? t('common.anonymous')}
                   </p>
                   <span className="text-[15px] font-bold text-primary">
                     {t('league.points', { points: entry.score.toLocaleString() })}

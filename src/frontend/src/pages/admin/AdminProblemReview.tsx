@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Check, X, Pencil } from 'lucide-react';
 import {
   getPendingProblems,
@@ -17,16 +18,17 @@ import EmptyState from '../../components/ui/EmptyState';
 
 function validations(p: Problem) {
   return [
-    { label: '어법 검증', ok: Boolean(p.detailed_explanation || p.explanation) },
+    { key: 'checkGrammar', ok: Boolean(p.detailed_explanation || p.explanation) },
     {
-      label: '정답 검증',
+      key: 'checkAnswer',
       ok: Boolean(p.options && p.correct_answer && p.options.includes(p.correct_answer)),
     },
-    { label: '변별력 검증', ok: Boolean(p.options && p.options.length === 4) },
+    { key: 'checkDiscrimination', ok: Boolean(p.options && p.options.length === 4) },
   ];
 }
 
 export default function AdminProblemReview() {
+  const { t } = useTranslation();
   const [problems, setProblems] = useState<Problem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -104,23 +106,23 @@ export default function AdminProblemReview() {
 
   return (
     <div className="mx-auto min-h-screen max-w-mobile bg-surface-soft">
-      <TopBar title="문제 검토" showBack showSearch={false} showBell={false} />
+      <TopBar title={t('admin.reviewTitle')} showBack showSearch={false} showBell={false} />
       <div className="px-5 pb-12 pt-2">
         {error && <p className="mb-3 text-[14px] text-error">{error}</p>}
 
         {loading ? (
           <Spinner />
         ) : problems.length === 0 ? (
-          <EmptyState emoji="✅" title="검토할 문제가 없습니다." />
+          <EmptyState emoji="✅" title={t('admin.noPending')} />
         ) : (
           <ul className="space-y-4">
             {problems.map((p) => (
               <li key={p.id}>
                 <Card>
                   <div className="mb-2 flex items-center gap-2">
-                    <Badge tone="neutral">{p.category}</Badge>
-                    <Badge tone="yellow">검토 대기</Badge>
-                    {p.created_by === 'ai' && <Badge tone="primary">AI 생성</Badge>}
+                    <Badge tone="neutral">{t(`test.category.${p.category}`, p.category)}</Badge>
+                    <Badge tone="yellow">{t('admin.badgePending')}</Badge>
+                    {p.created_by === 'ai' && <Badge tone="primary">{t('admin.badgeAi')}</Badge>}
                   </div>
 
                   <p className="text-[16px] font-semibold text-ink">{p.question}</p>
@@ -146,17 +148,19 @@ export default function AdminProblemReview() {
                   )}
 
                   <div className="mt-3 rounded-xl bg-surface-muted p-3">
-                    <p className="mb-1.5 text-[12px] font-semibold text-ink-soft">AI 검증 결과</p>
+                    <p className="mb-1.5 text-[12px] font-semibold text-ink-soft">
+                      {t('admin.aiResult')}
+                    </p>
                     <div className="flex flex-wrap gap-x-4 gap-y-1">
                       {validations(p).map((v) => (
                         <span
-                          key={v.label}
+                          key={v.key}
                           className={`flex items-center gap-1 text-[13px] ${
                             v.ok ? 'text-success' : 'text-error'
                           }`}
                         >
                           {v.ok ? <Check size={14} strokeWidth={2.5} /> : <X size={14} strokeWidth={2.5} />}
-                          {v.label}
+                          {t(`admin.${v.key}`)}
                         </span>
                       ))}
                     </div>
@@ -168,7 +172,7 @@ export default function AdminProblemReview() {
                       disabled={busyId === p.id}
                       onClick={() => handleApprove(p)}
                     >
-                      ✅ 승인
+                      ✅ {t('admin.approve')}
                     </Button>
                     <Button
                       variant="ghost"
@@ -178,10 +182,10 @@ export default function AdminProblemReview() {
                         setReason('');
                       }}
                     >
-                      ❌ 거부
+                      ❌ {t('admin.reject')}
                     </Button>
                     <Button variant="secondary" disabled={busyId === p.id} onClick={() => openEdit(p)}>
-                      <Pencil size={16} strokeWidth={1.9} /> 수정
+                      <Pencil size={16} strokeWidth={1.9} /> {t('admin.edit')}
                     </Button>
                   </div>
                 </Card>
@@ -195,21 +199,21 @@ export default function AdminProblemReview() {
       {rejecting && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-4">
           <div className="w-full max-w-mobile rounded-card bg-white p-5">
-            <h2 className="text-title-m text-ink">거부 사유</h2>
-            <p className="mt-1 text-[13px] text-ink-soft">사유는 AI 학습 로그로 저장됩니다.</p>
+            <h2 className="text-title-m text-ink">{t('admin.rejectReason')}</h2>
+            <p className="mt-1 text-[13px] text-ink-soft">{t('admin.rejectReasonDesc')}</p>
             <textarea
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               rows={3}
-              placeholder="예: 보기 ②가 정답과 의미가 중복됩니다."
+              placeholder={t('admin.rejectPlaceholder')}
               className="mt-3 w-full resize-none rounded-xl border border-line px-3 py-2.5 text-[15px] outline-none focus:border-primary"
             />
             <div className="mt-4 grid grid-cols-2 gap-2">
               <Button variant="ghost" onClick={() => setRejecting(null)}>
-                취소
+                {t('common.cancel')}
               </Button>
               <Button onClick={handleReject} disabled={!reason.trim() || busyId === rejecting.id}>
-                거부 확정
+                {t('admin.rejectConfirm')}
               </Button>
             </div>
           </div>
@@ -220,21 +224,27 @@ export default function AdminProblemReview() {
       {editing && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-4">
           <div className="w-full max-w-mobile rounded-card bg-white p-5">
-            <h2 className="text-title-m text-ink">문제 수정</h2>
-            <label className="mt-3 block text-[13px] font-medium text-ink-soft">문제</label>
+            <h2 className="text-title-m text-ink">{t('admin.editProblem')}</h2>
+            <label className="mt-3 block text-[13px] font-medium text-ink-soft">
+              {t('admin.fieldQuestion')}
+            </label>
             <textarea
               value={editFields.question}
               onChange={(e) => setEditFields((f) => ({ ...f, question: e.target.value }))}
               rows={2}
               className="mt-1 w-full resize-none rounded-xl border border-line px-3 py-2.5 text-[15px] outline-none focus:border-primary"
             />
-            <label className="mt-3 block text-[13px] font-medium text-ink-soft">정답</label>
+            <label className="mt-3 block text-[13px] font-medium text-ink-soft">
+              {t('admin.fieldAnswer')}
+            </label>
             <input
               value={editFields.correct_answer}
               onChange={(e) => setEditFields((f) => ({ ...f, correct_answer: e.target.value }))}
               className="mt-1 h-[44px] w-full rounded-xl border border-line px-3 text-[15px] outline-none focus:border-primary"
             />
-            <label className="mt-3 block text-[13px] font-medium text-ink-soft">해설</label>
+            <label className="mt-3 block text-[13px] font-medium text-ink-soft">
+              {t('admin.fieldExplanation')}
+            </label>
             <textarea
               value={editFields.explanation}
               onChange={(e) => setEditFields((f) => ({ ...f, explanation: e.target.value }))}
@@ -243,10 +253,10 @@ export default function AdminProblemReview() {
             />
             <div className="mt-4 grid grid-cols-2 gap-2">
               <Button variant="ghost" onClick={() => setEditing(null)}>
-                취소
+                {t('common.cancel')}
               </Button>
               <Button onClick={handleSaveEdit} disabled={busyId === editing.id}>
-                저장
+                {t('admin.save')}
               </Button>
             </div>
           </div>

@@ -107,9 +107,12 @@ export default function Home() {
               <Target size={22} strokeWidth={1.9} />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-[15px] font-bold text-primary">오늘의 약점 보충 학습</p>
+              <p className="text-[15px] font-bold text-primary">{t('home.weakTitle')}</p>
               <p className="mt-0.5 text-[13px] text-primary-dark">
-                {t(`test.category.${rec.weak_category}`, rec.weak_category)} 영역 {rec.problems.length}문제 추천
+                {t('home.weakSub', {
+                  category: t(`test.category.${rec.weak_category}`, rec.weak_category),
+                  count: rec.problems.length,
+                })}
               </p>
             </div>
             <ChevronRight size={20} strokeWidth={1.9} className="shrink-0 text-primary" />

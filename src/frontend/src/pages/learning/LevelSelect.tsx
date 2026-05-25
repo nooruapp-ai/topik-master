@@ -29,10 +29,12 @@ export default function LevelSelect() {
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      <p className="text-title-m text-ink">{lv.title}</p>
-                      <span className="text-[12px] font-semibold text-ink-faint">{lv.sub}</span>
+                      <p className="text-title-m text-ink">{t(`learn.levelTitle.${lv.code}`)}</p>
+                      <span className="text-[12px] font-semibold text-ink-faint">
+                        {t(`learn.levelSub.${lv.code}`)}
+                      </span>
                     </div>
-                    <p className="mt-0.5 text-[14px] text-ink-soft">{lv.desc}</p>
+                    <p className="mt-0.5 text-[14px] text-ink-soft">{t(`learn.levelDesc.${lv.code}`)}</p>
                   </div>
                   <ChevronRight size={20} strokeWidth={1.75} className="shrink-0 text-ink-faint" />
                 </Card>

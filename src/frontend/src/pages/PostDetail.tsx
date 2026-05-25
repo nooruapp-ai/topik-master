@@ -170,7 +170,7 @@ export default function PostDetail() {
           </div>
           <h1 className="mt-2 text-lg font-bold text-gray-900">{post.title}</h1>
           <div className="mt-1 flex items-center gap-2 text-xs text-gray-400">
-            <span>{post.author?.username ?? '익명'}</span>
+            <span>{post.author?.username ?? t('common.anonymous')}</span>
             <span>·</span>
             <span>{new Date(post.created_at).toLocaleDateString('ko-KR')}</span>
           </div>
@@ -225,7 +225,7 @@ export default function PostDetail() {
                 <li key={c.id} className="rounded-2xl border border-gray-200 bg-white p-3">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-semibold text-gray-700">
-                      {c.author?.username ?? '익명'}
+                      {c.author?.username ?? t('common.anonymous')}
                     </span>
                     {user && c.user_id === user.id && (
                       <button

@@ -12,7 +12,14 @@
     "submit": "제출",
     "close": "닫기",
     "empty": "표시할 내용이 없습니다.",
-    "level": "{{level}}급"
+    "level": "{{level}}급",
+    "anonymous": "익명",
+    "someone": "누군가"
+  },
+  "errorBoundary": {
+    "title": "문제가 발생했어요",
+    "desc": "잠시 후 다시 시도해주세요.",
+    "retry": "다시 시도"
   },
   "nav": {
     "home": "홈",
@@ -32,7 +39,8 @@
   },
   "notifications": {
     "title": "알림",
-    "empty": "새로운 알림이 없습니다."
+    "empty": "새로운 알림이 없습니다.",
+    "actorSuffix": "님이"
   },
   "auth": {
     "loginTitle": "로그인",
@@ -61,7 +69,9 @@
     "streak": "연속 학습 {{days}}일",
     "totalPoints": "누적 포인트",
     "level": "레벨 {{level}}",
-    "recommendedCourses": "추천 강좌"
+    "recommendedCourses": "추천 강좌",
+    "weakTitle": "오늘의 약점 보충 학습",
+    "weakSub": "{{category}} 영역 {{count}}문제 추천"
   },
   "learning": {
     "title": "학습",
@@ -150,10 +160,15 @@
     "memberSince": "가입일",
     "tabStats": "통계",
     "tabSaved": "저장한 콘텐츠",
+    "tabAnalysis": "분석",
     "savedEmpty": "저장한 콘텐츠가 없습니다.",
     "studyTime": "예상 학습시간",
     "byCategory": "영역별 풀이·정답",
     "noData": "아직 데이터가 없습니다. 문제를 풀어보세요!",
+    "adminConsole": "관리자 콘솔",
+    "language": "언어",
+    "langKo": "한국어",
+    "langJa": "日本語",
     "unit": {
       "count": "개",
       "percent": "%",
@@ -165,7 +180,23 @@
     "title": "학습",
     "selectLevel": "학습할 단계를 선택하세요",
     "selectCategory": "학습할 영역을 선택하세요",
+    "levelTitle": {
+      "topik1": "TOPIK I",
+      "topik2_mid": "TOPIK II 중급",
+      "topik2_high": "TOPIK II 고급"
+    },
+    "levelSub": {
+      "topik1": "초급 · 1~2급",
+      "topik2_mid": "3~4급",
+      "topik2_high": "5~6급"
+    },
+    "levelDesc": {
+      "topik1": "기초 문법과 일상 어휘를 다집니다.",
+      "topik2_mid": "중급 문법과 독해·듣기 실력을 키웁니다.",
+      "topik2_high": "고급 어휘와 쓰기·논술에 도전합니다."
+    },
     "typeCount": "{{count}}개 유형",
+    "typeNumber": "유형 {{n}}",
     "avgAccuracy": "평균 정답률 {{rate}}%",
     "difficulty": "난이도",
     "start": "학습 시작",
@@ -196,5 +227,54 @@
     "reviewAgain": "복습하기",
     "home": "홈으로",
     "mustReadTips": "꿀팁을 먼저 학습해 주세요."
+  },
+  "analysis": {
+    "recommend": "추천 학습",
+    "weakMsg": "{{category}} 영역이 약해요. 집중 보충 학습을 추천합니다!",
+    "startWeak": "약점 보충 학습 시작 ({{count}}문제)",
+    "weakAreas": "약점 영역",
+    "strongAreas": "강점 영역",
+    "wrongCount": "{{count}}회 틀림",
+    "byCategory": "영역별 정답률",
+    "accuracyKey": "정답률",
+    "noData": "아직 분석할 데이터가 없어요. 문제를 풀어보세요!"
+  },
+  "admin": {
+    "dashboard": "관리자 대시보드",
+    "statTotal": "전체 문제",
+    "statPending": "검토 대기",
+    "statApproved": "승인됨",
+    "statRejected": "거부됨",
+    "statAi": "AI 생성",
+    "reviewWaiting": "검토 대기 문제",
+    "reviewWaitingDesc": "{{count}}건의 문제가 검토를 기다리고 있어요.",
+    "startReview": "검토 시작하기",
+    "aiGenerate": "AI 문제 생성",
+    "genLevel": "레벨",
+    "genCategory": "영역",
+    "genCount": "생성 개수",
+    "generate": "생성하기",
+    "generating": "생성 중...",
+    "generatedMsg": "{{count}}개 문제가 생성되어 검토 대기에 추가되었습니다.",
+    "reviewTitle": "문제 검토",
+    "noPending": "검토할 문제가 없습니다.",
+    "badgePending": "검토 대기",
+    "badgeAi": "AI 생성",
+    "aiResult": "AI 검증 결과",
+    "checkGrammar": "어법 검증",
+    "checkAnswer": "정답 검증",
+    "checkDiscrimination": "변별력 검증",
+    "approve": "승인",
+    "reject": "거부",
+    "edit": "수정",
+    "rejectReason": "거부 사유",
+    "rejectReasonDesc": "사유는 AI 학습 로그로 저장됩니다.",
+    "rejectPlaceholder": "예: 보기 ②가 정답과 의미가 중복됩니다.",
+    "rejectConfirm": "거부 확정",
+    "editProblem": "문제 수정",
+    "fieldQuestion": "문제",
+    "fieldAnswer": "정답",
+    "fieldExplanation": "해설",
+    "save": "저장"
   }
 }
