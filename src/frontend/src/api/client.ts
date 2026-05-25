@@ -1,4 +1,5 @@
 import axios, { AxiosError } from 'axios';
+import { showToast } from '../lib/toast';
 
 export const TOKEN_KEY = 'topik_token';
 export const USER_KEY = 'topik_user';
@@ -25,8 +26,14 @@ client.interceptors.response.use(
       localStorage.removeItem(TOKEN_KEY);
       localStorage.removeItem(USER_KEY);
       if (window.location.pathname !== '/login' && window.location.pathname !== '/signup') {
+        showToast('세션이 만료되었습니다. 다시 로그인해주세요.', 'info');
         window.location.href = '/login';
       }
+    } else if (!error.response) {
+      // 응답 자체가 없으면 네트워크 단절
+      showToast('네트워크 연결을 확인해주세요.', 'error');
+    } else if (error.response.status >= 500) {
+      showToast('서버 오류가 발생했어요. 잠시 후 다시 시도해주세요.', 'error');
     }
     return Promise.reject(error);
   }
