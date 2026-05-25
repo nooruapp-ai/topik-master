@@ -8,6 +8,7 @@ import Learning from './pages/Learning';
 import Test from './pages/Test';
 import League from './pages/League';
 import Community from './pages/Community';
+import PostDetail from './pages/PostDetail';
 import Profile from './pages/Profile';
 
 export default function App() {
@@ -23,6 +24,7 @@ export default function App() {
           <Route path="/test" element={<Test />} />
           <Route path="/league" element={<League />} />
           <Route path="/community" element={<Community />} />
+          <Route path="/community/:id" element={<PostDetail />} />
           <Route path="/profile" element={<Profile />} />
         </Route>
       </Route>
