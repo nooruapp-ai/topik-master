@@ -5,6 +5,7 @@ import { AppError } from '../middleware/errorHandler';
 import { authenticate } from '../middleware/auth';
 import { requireAdmin } from '../middleware/admin';
 import { AuthRequest } from '../types';
+import { generateProblems } from '../services/aiGeneration';
 
 const router = Router();
 
@@ -177,6 +178,23 @@ router.post(
 
     if (error) throw new AppError(error.message || '관리자 추가에 실패했습니다.', 500);
     res.status(201).json({ success: true, data });
+  })
+);
+
+/** POST /api/admin/generate-problems  body: { level, category, count } */
+router.post(
+  '/generate-problems',
+  asyncHandler(async (req, res) => {
+    const { level, category, count } = req.body as {
+      level?: string;
+      category?: string;
+      count?: number;
+    };
+    if (!level || !category) {
+      throw new AppError('level 과 category 는 필수입니다.', 400);
+    }
+    const result = await generateProblems(level, category, Number(count) || 5);
+    res.status(201).json({ success: true, data: result });
   })
 );
 
