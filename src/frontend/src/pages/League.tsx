@@ -4,6 +4,9 @@ import { getLeaderboard } from '../api/leaderboard';
 import { getErrorMessage } from '../api/client';
 import type { LeaderboardEntry } from '../types';
 import Spinner from '../components/Spinner';
+import TopBar from '../components/ui/TopBar';
+import Card from '../components/ui/Card';
+import Avatar from '../components/ui/Avatar';
 
 const MEDALS: Record<number, string> = { 1: '🥇', 2: '🥈', 3: '🥉' };
 
@@ -34,55 +37,52 @@ export default function League() {
   }, [period]);
 
   return (
-    <div className="px-5 pt-6">
-      <header className="mb-4">
-        <h1 className="text-xl font-bold text-gray-900">{t('league.title')}</h1>
-        <p className="mt-1 text-sm text-gray-500">{t('league.subtitle')}</p>
-      </header>
+    <div>
+      <TopBar title={t('league.title')} />
+      <div className="px-5 pt-2">
+        <p className="mb-4 text-[14px] text-ink-soft">{t('league.subtitle')}</p>
 
-      <div className="mb-5 grid grid-cols-2 gap-2 rounded-xl bg-gray-100 p-1">
-        {(['weekly', 'global'] as const).map((p) => (
-          <button
-            key={p}
-            onClick={() => setPeriod(p)}
-            className={`rounded-lg py-2 text-sm font-semibold transition ${
-              period === p ? 'bg-white text-primary shadow-sm' : 'text-gray-500'
-            }`}
-          >
-            {t(`league.${p}`)}
-          </button>
-        ))}
-      </div>
-
-      {loading ? (
-        <Spinner />
-      ) : error ? (
-        <p className="rounded-xl bg-white p-4 text-sm text-red-500">{error}</p>
-      ) : entries.length === 0 ? (
-        <p className="rounded-xl bg-white p-4 text-sm text-gray-400">{t('league.empty')}</p>
-      ) : (
-        <ul className="space-y-2">
-          {entries.map((entry) => (
-            <li
-              key={entry.id}
-              className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white p-4"
+        <div className="mb-5 grid grid-cols-2 gap-1 rounded-xl bg-surface-muted p-1">
+          {(['weekly', 'global'] as const).map((p) => (
+            <button
+              key={p}
+              onClick={() => setPeriod(p)}
+              className={`rounded-lg py-2.5 text-[14px] font-semibold transition-colors duration-200 ${
+                period === p ? 'bg-white text-primary shadow-card' : 'text-ink-soft'
+              }`}
             >
-              <span className="w-8 text-center text-lg font-bold text-gray-700">
-                {MEDALS[entry.rank] ?? entry.rank}
-              </span>
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-50 font-semibold text-primary">
-                {entry.user?.username?.charAt(0) ?? '?'}
-              </div>
-              <p className="flex-1 truncate font-medium text-gray-900">
-                {entry.user?.username ?? '익명'}
-              </p>
-              <span className="font-bold text-primary">
-                {t('league.points', { points: entry.score.toLocaleString() })}
-              </span>
-            </li>
+              {t(`league.${p}`)}
+            </button>
           ))}
-        </ul>
-      )}
+        </div>
+
+        {loading ? (
+          <Spinner />
+        ) : error ? (
+          <Card className="text-[14px] text-error">{error}</Card>
+        ) : entries.length === 0 ? (
+          <Card className="text-[14px] text-ink-faint">{t('league.empty')}</Card>
+        ) : (
+          <ul className="space-y-2.5">
+            {entries.map((entry) => (
+              <li key={entry.id}>
+                <Card padded={false} className="flex items-center gap-3 p-4">
+                  <span className="w-7 text-center text-[17px] font-bold text-ink-soft">
+                    {MEDALS[entry.rank] ?? entry.rank}
+                  </span>
+                  <Avatar name={entry.user?.username} size="sm" />
+                  <p className="flex-1 truncate text-[15px] font-medium text-ink">
+                    {entry.user?.username ?? '익명'}
+                  </p>
+                  <span className="text-[15px] font-bold text-primary">
+                    {t('league.points', { points: entry.score.toLocaleString() })}
+                  </span>
+                </Card>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }

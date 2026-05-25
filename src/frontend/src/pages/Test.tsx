@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Check, X } from 'lucide-react';
 import { getProblems, submitAnswer } from '../api/problems';
 import { getErrorMessage } from '../api/client';
 import type { Problem, SubmissionResult } from '../types';
 import Spinner from '../components/Spinner';
+import TopBar from '../components/ui/TopBar';
+import Card from '../components/ui/Card';
+import Button from '../components/ui/Button';
 
 const CATEGORIES = ['all', 'listening', 'reading', 'grammar', 'vocabulary', 'writing'];
 
@@ -81,139 +85,127 @@ export default function Test() {
   }
 
   return (
-    <div className="px-5 pt-6">
-      <header className="mb-4">
-        <h1 className="text-xl font-bold text-gray-900">{t('test.title')}</h1>
-        <p className="mt-1 text-sm text-gray-500">{t('test.subtitle')}</p>
-      </header>
+    <div>
+      <TopBar title={t('test.title')} />
+      <div className="px-5 pt-2">
+        <p className="mb-4 text-[14px] text-ink-soft">{t('test.subtitle')}</p>
 
-      <div className="mb-5 flex gap-2 overflow-x-auto pb-1">
-        {CATEGORIES.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setCategory(cat)}
-            className={`shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition ${
-              category === cat
-                ? 'bg-primary text-white'
-                : 'border border-gray-200 bg-white text-gray-500'
-            }`}
-          >
-            {t(`test.category.${cat}`)}
-          </button>
-        ))}
-      </div>
-
-      {loading ? (
-        <Spinner />
-      ) : error ? (
-        <p className="rounded-xl bg-white p-4 text-sm text-red-500">{error}</p>
-      ) : problems.length === 0 ? (
-        <p className="rounded-xl bg-white p-4 text-sm text-gray-400">{t('test.empty')}</p>
-      ) : finished ? (
-        <div className="rounded-2xl border border-gray-200 bg-white p-6 text-center">
-          <p className="text-4xl">🏆</p>
-          <h2 className="mt-3 text-lg font-bold text-gray-900">{t('test.result')}</h2>
-          <p className="mt-2 text-gray-700">
-            {t('test.scoreSummary', { total: problems.length, correct: correctCount })}
-          </p>
-          <p className="mt-1 text-sm text-gray-500">
-            {t('test.accuracy', {
-              accuracy: Math.round((correctCount / problems.length) * 100),
-            })}
-          </p>
-          <button
-            onClick={restart}
-            className="mt-5 w-full rounded-xl bg-primary py-3 font-semibold text-white transition active:scale-[.99]"
-          >
-            {t('test.restart')}
-          </button>
-        </div>
-      ) : current ? (
-        <div className="rounded-2xl border border-gray-200 bg-white p-5">
-          <p className="mb-2 text-xs font-medium text-primary">
-            {t('test.question', { current: index + 1, total: problems.length })}
-          </p>
-          <div className="mb-4 h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
-            <div
-              className="h-full rounded-full bg-primary transition-all"
-              style={{ width: `${((index + 1) / problems.length) * 100}%` }}
-            />
-          </div>
-          <p className="mb-5 text-base font-semibold leading-relaxed text-gray-900">
-            {current.question}
-          </p>
-
-          {current.options && current.options.length > 0 ? (
-            <div className="space-y-2">
-              {current.options.map((option, i) => {
-                const isPicked = selected === option;
-                const showCorrect = result && option === result.correct_answer;
-                const showWrong = result && isPicked && !result.is_correct;
-                return (
-                  <button
-                    key={i}
-                    disabled={Boolean(result)}
-                    onClick={() => setSelected(option)}
-                    className={`w-full rounded-xl border px-4 py-3 text-left text-sm transition ${
-                      showCorrect
-                        ? 'border-green-500 bg-green-50 text-green-700'
-                        : showWrong
-                          ? 'border-red-500 bg-red-50 text-red-700'
-                          : isPicked
-                            ? 'border-primary bg-primary-50 text-primary'
-                            : 'border-gray-200 text-gray-700'
-                    }`}
-                  >
-                    {option}
-                  </button>
-                );
-              })}
-            </div>
-          ) : (
-            <input
-              type="text"
-              value={selected}
-              onChange={(e) => setSelected(e.target.value)}
-              disabled={Boolean(result)}
-              placeholder={t('test.start')}
-              className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-            />
-          )}
-
-          {result && (
-            <div
-              className={`mt-4 rounded-xl p-3 text-sm ${
-                result.is_correct ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
+        <div className="mb-5 flex gap-2 overflow-x-auto pb-1">
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setCategory(cat)}
+              className={`shrink-0 rounded-full px-4 py-2 text-[14px] font-medium transition-colors duration-200 ${
+                category === cat ? 'bg-primary text-white' : 'border border-line bg-white text-ink-soft'
               }`}
             >
-              <p className="font-semibold">
-                {result.is_correct ? t('test.correct') : t('test.incorrect')}
-              </p>
-              {!result.is_correct && (
-                <p className="mt-1">{t('test.correctAnswer', { answer: result.correct_answer })}</p>
-              )}
-              {result.explanation && <p className="mt-1 text-gray-600">{result.explanation}</p>}
-            </div>
-          )}
-
-          {result ? (
-            <button
-              onClick={handleNext}
-              className="mt-5 w-full rounded-xl bg-primary py-3 font-semibold text-white transition active:scale-[.99]"
-            >
-              {index + 1 >= problems.length ? t('test.finish') : t('test.next')}
+              {t(`test.category.${cat}`)}
             </button>
-          ) : (
-            <button
-              onClick={handleSubmit}
-              disabled={!selected || submitting}
-              className="mt-5 w-full rounded-xl bg-primary py-3 font-semibold text-white transition active:scale-[.99] disabled:opacity-50"
-            >
-              {submitting ? t('common.loading') : t('common.submit')}
-            </button>
-          )}
+          ))}
         </div>
-      ) : null}
+
+        {loading ? (
+          <Spinner />
+        ) : error ? (
+          <Card className="text-[14px] text-error">{error}</Card>
+        ) : problems.length === 0 ? (
+          <Card className="text-[14px] text-ink-faint">{t('test.empty')}</Card>
+        ) : finished ? (
+          <Card className="text-center">
+            <p className="text-5xl">🏆</p>
+            <h2 className="mt-3 text-title-m text-ink">{t('test.result')}</h2>
+            <p className="mt-2 text-[15px] text-ink-soft">
+              {t('test.scoreSummary', { total: problems.length, correct: correctCount })}
+            </p>
+            <p className="mt-1 text-[14px] text-ink-faint">
+              {t('test.accuracy', { accuracy: Math.round((correctCount / problems.length) * 100) })}
+            </p>
+            <Button onClick={restart} className="mt-6">
+              {t('test.restart')}
+            </Button>
+          </Card>
+        ) : current ? (
+          <Card>
+            <p className="mb-2 text-[12px] font-semibold text-primary">
+              {t('test.question', { current: index + 1, total: problems.length })}
+            </p>
+            <div className="mb-4 h-1.5 w-full overflow-hidden rounded-full bg-surface-muted">
+              <div
+                className="h-full rounded-full bg-primary transition-all duration-300 ease-ios"
+                style={{ width: `${((index + 1) / problems.length) * 100}%` }}
+              />
+            </div>
+            <p className="mb-5 text-[18px] font-semibold leading-relaxed text-ink">
+              {current.question}
+            </p>
+
+            {current.options && current.options.length > 0 ? (
+              <div className="space-y-2.5">
+                {current.options.map((option, i) => {
+                  const isPicked = selected === option;
+                  const showCorrect = result && option === result.correct_answer;
+                  const showWrong = result && isPicked && !result.is_correct;
+                  return (
+                    <button
+                      key={i}
+                      disabled={Boolean(result)}
+                      onClick={() => setSelected(option)}
+                      className={`flex w-full items-center justify-between rounded-xl border px-4 py-3.5 text-left text-[15px] transition-colors duration-200 ${
+                        showCorrect
+                          ? 'border-success bg-success/10 text-success'
+                          : showWrong
+                            ? 'border-error bg-error/10 text-error'
+                            : isPicked
+                              ? 'border-primary bg-primary-light text-primary'
+                              : 'border-line text-ink'
+                      }`}
+                    >
+                      <span>{option}</span>
+                      {showCorrect && <Check size={18} strokeWidth={2} />}
+                      {showWrong && <X size={18} strokeWidth={2} />}
+                    </button>
+                  );
+                })}
+              </div>
+            ) : (
+              <input
+                type="text"
+                value={selected}
+                onChange={(e) => setSelected(e.target.value)}
+                disabled={Boolean(result)}
+                placeholder={t('test.start')}
+                className="h-[52px] w-full rounded-xl border border-line px-4 text-[16px] outline-none focus:border-primary focus:ring-2 focus:ring-primary/15"
+              />
+            )}
+
+            {result && (
+              <div
+                className={`mt-4 rounded-xl p-4 text-[14px] ${
+                  result.is_correct ? 'bg-success/10 text-success' : 'bg-error/10 text-error'
+                }`}
+              >
+                <p className="font-semibold">
+                  {result.is_correct ? t('test.correct') : t('test.incorrect')}
+                </p>
+                {!result.is_correct && (
+                  <p className="mt-1">{t('test.correctAnswer', { answer: result.correct_answer })}</p>
+                )}
+                {result.explanation && <p className="mt-1 text-ink-soft">{result.explanation}</p>}
+              </div>
+            )}
+
+            {result ? (
+              <Button onClick={handleNext} className="mt-6">
+                {index + 1 >= problems.length ? t('test.finish') : t('test.next')}
+              </Button>
+            ) : (
+              <Button onClick={handleSubmit} disabled={!selected || submitting} className="mt-6">
+                {submitting ? t('common.loading') : t('common.submit')}
+              </Button>
+            )}
+          </Card>
+        ) : null}
+      </div>
     </div>
   );
 }

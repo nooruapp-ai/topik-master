@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { ChevronRight } from 'lucide-react';
 import { getCourses } from '../api/courses';
 import { getErrorMessage } from '../api/client';
 import type { Course } from '../types';
 import Spinner from '../components/Spinner';
+import TopBar from '../components/ui/TopBar';
+import Card from '../components/ui/Card';
+import Badge from '../components/ui/Badge';
 
 const LEVELS = [0, 1, 2, 3, 4, 5, 6];
 
@@ -35,58 +39,59 @@ export default function Learning() {
   }, [level]);
 
   return (
-    <div className="px-5 pt-6">
-      <header className="mb-4">
-        <h1 className="text-xl font-bold text-gray-900">{t('learning.title')}</h1>
-        <p className="mt-1 text-sm text-gray-500">{t('learning.subtitle')}</p>
-      </header>
+    <div>
+      <TopBar title={t('learning.title')} />
+      <div className="px-5 pt-2">
+        <p className="mb-4 text-[14px] text-ink-soft">{t('learning.subtitle')}</p>
 
-      <div className="mb-5 flex gap-2 overflow-x-auto pb-1">
-        {LEVELS.map((lv) => (
-          <button
-            key={lv}
-            onClick={() => setLevel(lv)}
-            className={`shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition ${
-              level === lv ? 'bg-primary text-white' : 'bg-white text-gray-500 border border-gray-200'
-            }`}
-          >
-            {lv === 0 ? t('learning.allLevels') : t('common.level', { level: lv })}
-          </button>
-        ))}
-      </div>
-
-      {loading ? (
-        <Spinner />
-      ) : error ? (
-        <p className="rounded-xl bg-white p-4 text-sm text-red-500">{error}</p>
-      ) : courses.length === 0 ? (
-        <p className="rounded-xl bg-white p-4 text-sm text-gray-400">{t('learning.empty')}</p>
-      ) : (
-        <ul className="space-y-3">
-          {courses.map((course) => (
-            <li key={course.id} className="rounded-2xl border border-gray-200 bg-white p-4">
-              <div className="mb-2 flex items-center gap-2">
-                <span className="rounded-md bg-primary-50 px-2 py-0.5 text-xs font-semibold text-primary">
-                  {t('common.level', { level: course.level })}
-                </span>
-                {course.category && (
-                  <span className="text-xs text-gray-400">{course.category}</span>
-                )}
-              </div>
-              <p className="font-semibold text-gray-900">{course.title}</p>
-              {course.description && (
-                <p className="mt-1 text-sm text-gray-500">{course.description}</p>
-              )}
-              <Link
-                to={`/learning/${course.id}`}
-                className="mt-3 block w-full rounded-xl bg-primary py-2.5 text-center text-sm font-semibold text-white transition active:scale-[.99]"
-              >
-                {t('learning.startCourse')}
-              </Link>
-            </li>
+        <div className="mb-5 flex gap-2 overflow-x-auto pb-1">
+          {LEVELS.map((lv) => (
+            <button
+              key={lv}
+              onClick={() => setLevel(lv)}
+              className={`shrink-0 rounded-full px-4 py-2 text-[14px] font-medium transition-colors duration-200 ${
+                level === lv ? 'bg-primary text-white' : 'border border-line bg-white text-ink-soft'
+              }`}
+            >
+              {lv === 0 ? t('learning.allLevels') : t('common.level', { level: lv })}
+            </button>
           ))}
-        </ul>
-      )}
+        </div>
+
+        {loading ? (
+          <Spinner />
+        ) : error ? (
+          <Card className="text-[14px] text-error">{error}</Card>
+        ) : courses.length === 0 ? (
+          <Card className="text-[14px] text-ink-faint">{t('learning.empty')}</Card>
+        ) : (
+          <ul className="space-y-4">
+            {courses.map((course) => (
+              <li key={course.id}>
+                <Link to={`/learning/${course.id}`}>
+                  <Card className="transition-transform duration-200 ease-ios active:scale-[0.99]">
+                    <div className="mb-2 flex items-center gap-2">
+                      <Badge tone="primary">{t('common.level', { level: course.level })}</Badge>
+                      {course.category && (
+                        <span className="text-[12px] text-ink-faint">{course.category}</span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="min-w-0 flex-1">
+                        <p className="text-[16px] font-semibold text-ink">{course.title}</p>
+                        {course.description && (
+                          <p className="mt-1 text-[14px] text-ink-soft">{course.description}</p>
+                        )}
+                      </div>
+                      <ChevronRight size={20} strokeWidth={1.75} className="shrink-0 text-ink-faint" />
+                    </div>
+                  </Card>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }
