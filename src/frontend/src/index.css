@@ -14,12 +14,20 @@ body,
 
 body {
   margin: 0;
+  font-family: 'Pretendard', system-ui, 'Apple SD Gothic Neo', sans-serif;
+  letter-spacing: -0.02em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f3f4f6;
-  color: #111827;
+  background-color: #fafafa;
+  color: #1f2937;
 }
 
 * {
   -webkit-tap-highlight-color: transparent;
+}
+
+@layer utilities {
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 }
