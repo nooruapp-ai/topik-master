@@ -110,6 +110,12 @@ export interface UserStatistics {
   };
 }
 
+export interface SearchResults {
+  courses: Course[];
+  problems: Problem[];
+  posts: Post[];
+}
+
 export interface ApiResponse<T> {
   success: boolean;
   data: T;

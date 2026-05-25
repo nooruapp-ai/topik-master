@@ -8,7 +8,7 @@ import { getCourses } from '../api/courses';
 import type { UserStatistics, Course } from '../types';
 import Spinner from '../components/Spinner';
 import Card from '../components/ui/Card';
-import Badge from '../components/ui/Badge';
+import SearchBar from '../components/ui/SearchBar';
 
 export default function Home() {
   const { t } = useTranslation();
@@ -47,6 +47,10 @@ export default function Home() {
         <p className="text-[14px] text-ink-soft">{t('app.name')}</p>
         <h1 className="mt-1 text-title-xl text-ink">{t('home.greeting', { name: user?.username ?? '' })}</h1>
       </header>
+
+      <div className="mb-6">
+        <SearchBar />
+      </div>
 
       <section className="mb-8 overflow-hidden rounded-xl3 bg-gradient-to-br from-primary to-primary-dark p-6 text-white shadow-elevated">
         <div className="flex items-start justify-between">

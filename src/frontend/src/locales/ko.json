@@ -22,6 +22,12 @@
     "community": "커뮤니티",
     "profile": "프로필"
   },
+  "search": {
+    "title": "검색",
+    "placeholder": "강좌·문제·게시글 검색",
+    "prompt": "검색어를 입력해보세요.",
+    "noResults": "'{{q}}'에 대한 결과가 없습니다."
+  },
   "auth": {
     "loginTitle": "로그인",
     "signupTitle": "회원가입",
