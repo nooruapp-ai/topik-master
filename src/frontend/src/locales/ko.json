@@ -48,6 +48,7 @@
     "weeklyRank": "이번 주 랭킹",
     "streak": "연속 학습 {{days}}일",
     "totalPoints": "누적 포인트",
+    "level": "레벨 {{level}}",
     "recommendedCourses": "추천 강좌"
   },
   "learning": {

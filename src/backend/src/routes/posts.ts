@@ -4,6 +4,7 @@ import { asyncHandler } from '../utils/asyncHandler';
 import { AppError } from '../middleware/errorHandler';
 import { authenticate } from '../middleware/auth';
 import { AuthRequest } from '../types';
+import { awardXp } from '../utils/gamification';
 
 const router = Router();
 
@@ -61,6 +62,9 @@ router.post(
     if (error || !data) {
       throw new AppError(error?.message ?? '게시글 작성에 실패했습니다.', 500);
     }
+
+    // 게임화: 게시글 작성 +5XP (best-effort)
+    await awardXp(req.user!.userId, 5);
 
     res.status(201).json({ success: true, data });
   })

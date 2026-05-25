@@ -4,6 +4,7 @@ import { asyncHandler } from '../utils/asyncHandler';
 import { AppError } from '../middleware/errorHandler';
 import { authenticate } from '../middleware/auth';
 import { AuthRequest } from '../types';
+import { awardXp, recomputeStreak } from '../utils/gamification';
 
 const router = Router();
 
@@ -52,6 +53,10 @@ router.post(
     if (error || !submission) {
       throw new AppError(error?.message ?? '제출 저장에 실패했습니다.', 500);
     }
+
+    // 게임화: 문제 풀이 +10XP, 스트릭 재계산 (best-effort)
+    await awardXp(userId, 10);
+    await recomputeStreak(userId);
 
     res.status(201).json({
       success: true,

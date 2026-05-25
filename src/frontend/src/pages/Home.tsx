@@ -36,6 +36,7 @@ export default function Home() {
 
   const totalPoints = stats?.profile?.total_points ?? stats?.statistics.total_score ?? 0;
   const streak = stats?.profile?.current_streak ?? 0;
+  const level = stats?.profile?.level ?? 1;
 
   return (
     <div className="px-5 pt-6">
@@ -47,8 +48,15 @@ export default function Home() {
       </header>
 
       <section className="mb-6 rounded-2xl bg-primary p-5 text-white">
-        <p className="text-sm opacity-90">{t('home.totalPoints')}</p>
-        <p className="mt-1 text-3xl font-bold">{totalPoints.toLocaleString()}</p>
+        <div className="flex items-start justify-between">
+          <div>
+            <p className="text-sm opacity-90">{t('home.totalPoints')}</p>
+            <p className="mt-1 text-3xl font-bold">{totalPoints.toLocaleString()}</p>
+          </div>
+          <span className="rounded-full bg-white/20 px-3 py-1 text-sm font-semibold">
+            {t('home.level', { level })}
+          </span>
+        </div>
         <p className="mt-3 text-sm opacity-90">{t('home.streak', { days: streak })}</p>
       </section>
 
