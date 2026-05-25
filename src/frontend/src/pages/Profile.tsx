@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { LogOut } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -14,21 +14,27 @@ import {
 } from 'recharts';
 import { useAuth } from '../context/AuthContext';
 import { getUserStatistics } from '../api/users';
+import { getBookmarks } from '../api/bookmarks';
 import { getErrorMessage } from '../api/client';
-import type { UserStatistics } from '../types';
+import type { UserStatistics, SearchResults } from '../types';
 import Spinner from '../components/Spinner';
 import TopBar from '../components/ui/TopBar';
 import Card from '../components/ui/Card';
 import Avatar from '../components/ui/Avatar';
+import Badge from '../components/ui/Badge';
 
 export default function Profile() {
   const { t } = useTranslation();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
+  const [tab, setTab] = useState<'stats' | 'saved'>('stats');
   const [stats, setStats] = useState<UserStatistics | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  const [saved, setSaved] = useState<SearchResults | null>(null);
+  const [savedLoading, setSavedLoading] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -41,6 +47,19 @@ export default function Profile() {
       active = false;
     };
   }, [user]);
+
+  useEffect(() => {
+    if (tab !== 'saved' || saved) return;
+    let active = true;
+    setSavedLoading(true);
+    getBookmarks()
+      .then((data) => active && setSaved(data))
+      .catch(() => active && setSaved({ courses: [], problems: [], posts: [] }))
+      .finally(() => active && setSavedLoading(false));
+    return () => {
+      active = false;
+    };
+  }, [tab, saved]);
 
   function handleLogout() {
     logout();
@@ -62,6 +81,10 @@ export default function Profile() {
     correct: c.correct,
   }));
 
+  const savedCount = saved
+    ? saved.courses.length + saved.problems.length + saved.posts.length
+    : 0;
+
   return (
     <div>
       <TopBar title={t('profile.title')} />
@@ -74,45 +97,88 @@ export default function Profile() {
           </div>
         </header>
 
-        <h2 className="mb-3 text-title-m text-ink">{t('profile.statistics')}</h2>
+        <div className="mb-5 grid grid-cols-2 gap-1 rounded-xl bg-surface-muted p-1">
+          {(['stats', 'saved'] as const).map((tk) => (
+            <button
+              key={tk}
+              onClick={() => setTab(tk)}
+              className={`rounded-lg py-2.5 text-[14px] font-semibold transition-colors duration-200 ${
+                tab === tk ? 'bg-white text-primary shadow-card' : 'text-ink-soft'
+              }`}
+            >
+              {tk === 'stats' ? t('profile.tabStats') : t('profile.tabSaved')}
+            </button>
+          ))}
+        </div>
 
-        {loading ? (
-          <Spinner />
-        ) : (
-          <>
-            {error && <p className="mb-3 text-[14px] text-error">{error}</p>}
+        {tab === 'stats' ? (
+          loading ? (
+            <Spinner />
+          ) : (
+            <>
+              {error && <p className="mb-3 text-[14px] text-error">{error}</p>}
 
-            <div className="grid grid-cols-2 gap-4">
-              {cards.map((card) => (
-                <Card key={card.label}>
-                  <p className="text-[14px] text-ink-soft">{card.label}</p>
-                  <p className="mt-1 text-2xl font-bold text-ink">
-                    {card.value.toLocaleString()}
-                    <span className="ml-1 text-[14px] font-medium text-ink-faint">{card.unit}</span>
-                  </p>
+              <div className="grid grid-cols-2 gap-4">
+                {cards.map((card) => (
+                  <Card key={card.label}>
+                    <p className="text-[14px] text-ink-soft">{card.label}</p>
+                    <p className="mt-1 text-2xl font-bold text-ink">
+                      {card.value.toLocaleString()}
+                      <span className="ml-1 text-[14px] font-medium text-ink-faint">{card.unit}</span>
+                    </p>
+                  </Card>
+                ))}
+              </div>
+
+              <h2 className="mb-3 mt-8 text-title-m text-ink">{t('profile.byCategory')}</h2>
+              {chartData.length === 0 ? (
+                <Card className="text-[14px] text-ink-faint">{t('profile.noData')}</Card>
+              ) : (
+                <Card>
+                  <ResponsiveContainer width="100%" height={220}>
+                    <BarChart data={chartData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F3F4F6" />
+                      <XAxis dataKey="name" tick={{ fontSize: 12, fill: '#6B7280' }} />
+                      <YAxis allowDecimals={false} tick={{ fontSize: 12, fill: '#9CA3AF' }} />
+                      <Tooltip />
+                      <Legend wrapperStyle={{ fontSize: 12 }} />
+                      <Bar dataKey="total" name={t('profile.totalSubmissions')} fill="#C7D2FE" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="correct" name={t('profile.correctCount')} fill="#6366F1" radius={[4, 4, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
                 </Card>
-              ))}
-            </div>
-
-            <h2 className="mb-3 mt-8 text-title-m text-ink">{t('profile.byCategory')}</h2>
-            {chartData.length === 0 ? (
-              <Card className="text-[14px] text-ink-faint">{t('profile.noData')}</Card>
-            ) : (
-              <Card>
-                <ResponsiveContainer width="100%" height={220}>
-                  <BarChart data={chartData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F3F4F6" />
-                    <XAxis dataKey="name" tick={{ fontSize: 12, fill: '#6B7280' }} />
-                    <YAxis allowDecimals={false} tick={{ fontSize: 12, fill: '#9CA3AF' }} />
-                    <Tooltip />
-                    <Legend wrapperStyle={{ fontSize: 12 }} />
-                    <Bar dataKey="total" name={t('profile.totalSubmissions')} fill="#C7D2FE" radius={[4, 4, 0, 0]} />
-                    <Bar dataKey="correct" name={t('profile.correctCount')} fill="#6366F1" radius={[4, 4, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
+              )}
+            </>
+          )
+        ) : savedLoading ? (
+          <Spinner />
+        ) : savedCount === 0 ? (
+          <Card className="text-[14px] text-ink-faint">{t('profile.savedEmpty')}</Card>
+        ) : (
+          <div className="space-y-3">
+            {saved!.courses.map((c) => (
+              <Link key={c.id} to={`/learning/${c.id}`}>
+                <Card className="flex items-center gap-3 transition-transform duration-200 ease-ios active:scale-[0.99]">
+                  <Badge>{t('common.level', { level: c.level })}</Badge>
+                  <p className="text-[15px] font-semibold text-ink">{c.title}</p>
+                </Card>
+              </Link>
+            ))}
+            {saved!.posts.map((p) => (
+              <Link key={p.id} to={`/community/${p.id}`}>
+                <Card className="transition-transform duration-200 ease-ios active:scale-[0.99]">
+                  <Badge tone="neutral">{t(`community.categoryFilter.${p.category}`, p.category)}</Badge>
+                  <p className="mt-1.5 text-[15px] font-semibold text-ink">{p.title}</p>
+                </Card>
+              </Link>
+            ))}
+            {saved!.problems.map((p) => (
+              <Card key={p.id}>
+                <Badge tone="mint">{t(`test.category.${p.category}`, p.category)}</Badge>
+                <p className="mt-1.5 text-[15px] text-ink">{p.question}</p>
               </Card>
-            )}
-          </>
+            ))}
+          </div>
         )}
 
         <button

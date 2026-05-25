@@ -7,6 +7,7 @@ import { getErrorMessage } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import type { Post, Comment } from '../types';
 import Spinner from '../components/Spinner';
+import BookmarkButton from '../components/ui/BookmarkButton';
 
 export default function PostDetail() {
   const { id } = useParams<{ id: string }>();
@@ -161,9 +162,12 @@ export default function PostDetail() {
         </form>
       ) : (
         <article className="rounded-2xl border border-gray-200 bg-white p-5">
-          <span className="rounded-md bg-primary-50 px-2 py-0.5 text-xs font-semibold text-primary">
-            {t(`community.categoryFilter.${post.category}`, post.category)}
-          </span>
+          <div className="flex items-center justify-between">
+            <span className="rounded-md bg-primary-50 px-2 py-0.5 text-xs font-semibold text-primary">
+              {t(`community.categoryFilter.${post.category}`, post.category)}
+            </span>
+            <BookmarkButton type="post" id={post.id} />
+          </div>
           <h1 className="mt-2 text-lg font-bold text-gray-900">{post.title}</h1>
           <div className="mt-1 flex items-center gap-2 text-xs text-gray-400">
             <span>{post.author?.username ?? '익명'}</span>

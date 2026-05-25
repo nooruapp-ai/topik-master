@@ -8,6 +8,7 @@ import Spinner from '../components/Spinner';
 import TopBar from '../components/ui/TopBar';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
+import BookmarkButton from '../components/ui/BookmarkButton';
 
 const CATEGORIES = ['all', 'listening', 'reading', 'grammar', 'vocabulary', 'writing'];
 
@@ -126,9 +127,12 @@ export default function Test() {
           </Card>
         ) : current ? (
           <Card>
-            <p className="mb-2 text-[12px] font-semibold text-primary">
-              {t('test.question', { current: index + 1, total: problems.length })}
-            </p>
+            <div className="mb-2 flex items-center justify-between">
+              <p className="text-[12px] font-semibold text-primary">
+                {t('test.question', { current: index + 1, total: problems.length })}
+              </p>
+              <BookmarkButton type="problem" id={current.id} />
+            </div>
             <div className="mb-4 h-1.5 w-full overflow-hidden rounded-full bg-surface-muted">
               <div
                 className="h-full rounded-full bg-primary transition-all duration-300 ease-ios"

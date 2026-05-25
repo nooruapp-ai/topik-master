@@ -6,6 +6,7 @@ import { getCourseProgress, saveLessonProgress } from '../api/progress';
 import { getErrorMessage } from '../api/client';
 import type { Course, Lesson } from '../types';
 import Spinner from '../components/Spinner';
+import BookmarkButton from '../components/ui/BookmarkButton';
 
 export default function CourseDetail() {
   const { id } = useParams<{ id: string }>();
@@ -69,7 +70,10 @@ export default function CourseDetail() {
         <p className="rounded-xl bg-white p-4 text-sm text-gray-400">{t('common.empty')}</p>
       ) : (
         <>
-          <h1 className="text-xl font-bold text-gray-900">{course.title}</h1>
+          <div className="flex items-start justify-between gap-2">
+            <h1 className="text-xl font-bold text-gray-900">{course.title}</h1>
+            <BookmarkButton type="course" id={course.id} />
+          </div>
           {course.description && <p className="mt-1 text-sm text-gray-500">{course.description}</p>}
 
           <div className="mt-4 rounded-2xl border border-gray-200 bg-white p-4">
